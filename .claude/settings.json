@@ -1,0 +1,142 @@
+{
+  "env": {
+    "CLAUDE_PROJECT_DIR": "/Users/yay/Desktop/project/AI/3dModel"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx block-no-verify@1.1.2"
+          }
+        ],
+        "description": "block-no-verify: 禁止 --no-verify 跳过 git hooks"
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/yay/.claude/plugins/cache/everything-claude-code/everything-claude-code/1.9.0/scripts/hooks/config-protection.js\"",
+            "timeout": 5
+          }
+        ],
+        "description": "config-protection: 阻止修改 linter/formatter 配置文件，强制修代码而非降低质量标准"
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"/Users/yay/.claude/plugins/cache/everything-claude-code/everything-claude-code/1.9.0/skills/continuous-learning-v2/hooks/observe.sh\" pre",
+            "async": true,
+            "timeout": 10
+          }
+        ],
+        "description": "continuous-learning-v2: 记录 pre-tool 事件"
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/yay/.claude/plugins/cache/everything-claude-code/everything-claude-code/1.9.0/scripts/hooks/suggest-compact.js\""
+          }
+        ],
+        "description": "strategic-compact: 50 次工具调用后建议 /compact"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/yay/.claude/plugins/cache/everything-claude-code/everything-claude-code/1.9.0/scripts/hooks/post-edit-format.js\""
+          }
+        ],
+        "description": "auto-format: 编辑 JS/TS 文件后自动格式化（Biome/Prettier 自动检测）"
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/yay/.claude/plugins/cache/everything-claude-code/everything-claude-code/1.9.0/scripts/hooks/post-edit-typecheck.js\""
+          }
+        ],
+        "description": "typecheck: 编辑 .ts/.tsx 后立即做 TypeScript 类型检查"
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/yay/.claude/plugins/cache/everything-claude-code/everything-claude-code/1.9.0/scripts/hooks/post-edit-console-warn.js\""
+          }
+        ],
+        "description": "console-warn: 编辑后检测 console.log 并发出警告"
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/yay/.claude/plugins/cache/everything-claude-code/everything-claude-code/1.9.0/scripts/hooks/quality-gate.js\"",
+            "async": true,
+            "timeout": 30
+          }
+        ],
+        "description": "quality-gate: 文件修改后异步运行质量检查"
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/yay/.claude/plugins/cache/everything-claude-code/everything-claude-code/1.9.0/scripts/hooks/post-bash-pr-created.js\""
+          }
+        ],
+        "description": "pr-created: 创建 PR 后记录 URL 并提示 review 命令"
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"/Users/yay/.claude/plugins/cache/everything-claude-code/everything-claude-code/1.9.0/skills/continuous-learning-v2/hooks/observe.sh\" post",
+            "async": true,
+            "timeout": 10
+          }
+        ],
+        "description": "continuous-learning-v2: 记录 post-tool 结果"
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/yay/.claude/plugins/cache/everything-claude-code/everything-claude-code/1.9.0/scripts/hooks/pre-compact.js\""
+          }
+        ],
+        "description": "pre-compact: /compact 前保存当前 session 状态"
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/yay/.claude/plugins/cache/everything-claude-code/everything-claude-code/1.9.0/scripts/hooks/check-console-log.js\""
+          }
+        ],
+        "description": "check-console-log: 每次响应结束后检查修改文件中的 console.log"
+      }
+    ]
+  }
+}
