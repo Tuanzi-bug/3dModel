@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  designs      Design[]
+  createdAt    DateTime @default(now())
+}
+
+model Design {
+  id         String   @id @default(cuid())
+  name       String
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  templateId String?
+  sceneGraph String   // JSON string
+  thumbnail  String?  // base64 data URL
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}

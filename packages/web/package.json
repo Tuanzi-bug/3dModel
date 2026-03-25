@@ -27,6 +27,7 @@
     "react-dom": "^19",
     "three": "^0.170",
     "zustand": "^5",
+    "zod": "^3",
     "@prisma/client": "^6"
   },
   "devDependencies": {
