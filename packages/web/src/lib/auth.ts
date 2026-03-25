@@ -27,5 +27,8 @@ export async function signToken(payload: { userId: string }): Promise<string> {
 
 export async function verifyToken(token: string): Promise<{ userId: string }> {
   const { payload } = await jwtVerify(token, getSecret())
-  return { userId: payload.userId as string }
+  if (typeof payload.userId !== 'string' || !payload.userId) {
+    throw new Error('Invalid token: missing userId claim')
+  }
+  return { userId: payload.userId }
 }

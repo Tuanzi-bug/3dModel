@@ -12,7 +12,7 @@ export async function withAuth(): Promise<AuthenticatedRequest | NextResponse> {
 
   if (!token) {
     return NextResponse.json(
-      { success: false, error: { code: 'AUTH_TOKEN_EXPIRED', message: 'Not authenticated' } },
+      { success: false, error: { code: 'UNAUTHORIZED', message: 'Not authenticated' } },
       { status: 401 },
     )
   }
