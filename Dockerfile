@@ -1,6 +1,6 @@
 # ---- Base: 所有阶段共享 ----
 FROM node:22-slim AS base
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
 WORKDIR /app
 
 # ---- Dependencies: 依赖安装层（缓存优化） ----
