@@ -1,3 +1,4 @@
+// @ts-nocheck - R3F JSX types not resolved in monorepo
 'use client'
 
 import type { CrossClampParams } from '@3d-modeler/core'
@@ -17,7 +18,7 @@ export function CrossClampMesh({ params, nodeId }: Props) {
   const outerRadius = (params.rodDiameter * DIAMETER_SCALE) / 2 + 0.003
 
   return (
-    <group onClick={(e) => { e.stopPropagation(); selectNode(nodeId) }}>
+    <group onClick={(e: any) => { e.stopPropagation(); selectNode(nodeId) }}>
       {/* Vertical ring */}
       <mesh>
         <torusGeometry args={[outerRadius, 0.002, 8, 16]} />

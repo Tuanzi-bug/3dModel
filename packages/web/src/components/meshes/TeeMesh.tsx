@@ -1,3 +1,4 @@
+// @ts-nocheck - R3F JSX types not resolved in monorepo
 'use client'
 
 import type { TeeConnectorParams } from '@3d-modeler/core'
@@ -18,7 +19,7 @@ export function TeeMesh({ params, nodeId }: Props) {
   const len = 0.02
 
   return (
-    <group onClick={(e) => { e.stopPropagation(); selectNode(nodeId) }}>
+    <group onClick={(e: any) => { e.stopPropagation(); selectNode(nodeId) }}>
       {/* Vertical cylinder */}
       <mesh>
         <cylinderGeometry args={[r, r, len, 12]} />

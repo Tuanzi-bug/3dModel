@@ -37,6 +37,10 @@
 
 ### 2.1 Monorepo 包结构（为跨端复用设计）
 
+**Monorepo 工具**：pnpm workspaces + Turborepo
+- pnpm：高效磁盘使用，原生 workspace 支持
+- Turborepo：增量构建缓存，适配 Next.js 生态
+
 ```
 packages/
 ├── core/              # 平台无关的共享逻辑（从 Phase 1 开始维护）
@@ -104,6 +108,9 @@ type SceneNode =
 type Vec3 = [number, number, number]
 ```
 
+**rotation 约定**：单位为弧度，Euler 顺序 XYZ（与 Three.js 默认一致）。
+例：绕 X 轴旋转 90°（水平光轴）→ `rotation: [Math.PI / 2, 0, 0]`
+
 **运行时校验**：使用 Zod 为每种组件定义 schema，在以下时机校验：
 1. 用户通过属性面板修改参数时（即时反馈）
 2. 保存到数据库前（防止非法数据持久化）
@@ -122,6 +129,16 @@ interface Design {
   updatedAt: string
   thumbnail: string | null
 }
+```
+
+**序列化边界**：
+- DB 层（Prisma）：`sceneGraph` 为 JSON 字符串
+- API 层：API Routes 负责 `JSON.parse`（读取时）和 `JSON.stringify`（写入时）
+- 前端层：始终操作 `SceneNode` 对象，不接触 JSON 字符串
+
+建议定义两个类型：
+- `DesignRecord`：对应 Prisma 模型，`sceneGraph: string`，`createdAt: Date`
+- `DesignDTO`：API 响应类型，`sceneGraph: SceneNode`，`createdAt: string`（ISO 8601）
 ```
 
 ### 4.2 组件参数定义
@@ -166,14 +183,14 @@ interface TemplateParams {
 
 ```
 root (group)
-├── rod-front-left   { type: 'rod', position: [0,0,0], params: { diameter: 8, length: 1.0 } }
-├── rod-front-right  { type: 'rod', position: [0.8,0,0], params: { diameter: 8, length: 1.0 } }
-├── rod-back-left    { type: 'rod', position: [0,0,0.4], params: { diameter: 8, length: 1.0 } }
-├── rod-back-right   { type: 'rod', position: [0.8,0,0.4], params: { diameter: 8, length: 1.0 } }
-├── shelf-bottom     { type: 'shelf', position: [0,0,0], params: { width: 0.8, depth: 0.4, thickness: 0.02, material: 'wood' } }
-├── shelf-top        { type: 'shelf', position: [0,0.5,0], params: { width: 0.8, depth: 0.4, thickness: 0.02, material: 'wood' } }
-├── clamp-bl-1       { type: 'crossClamp', position: [0,0,0], params: { rodDiameter: 8 } }
-├── clamp-br-1       { type: 'crossClamp', position: [0.8,0,0], params: { rodDiameter: 8 } }
+├── rod-front-left   { type: 'rod', position: [0,0,0], rotation: [0,0,0], params: { diameter: 8, length: 1.0 } }
+├── rod-front-right  { type: 'rod', position: [0.8,0,0], rotation: [0,0,0], params: { diameter: 8, length: 1.0 } }
+├── rod-back-left    { type: 'rod', position: [0,0,0.4], rotation: [0,0,0], params: { diameter: 8, length: 1.0 } }
+├── rod-back-right   { type: 'rod', position: [0.8,0,0.4], rotation: [0,0,0], params: { diameter: 8, length: 1.0 } }
+├── shelf-bottom     { type: 'shelf', position: [0,0,0], rotation: [0,0,0], params: { width: 0.8, depth: 0.4, thickness: 0.02, material: 'wood' } }
+├── shelf-top        { type: 'shelf', position: [0,0.5,0], rotation: [0,0,0], params: { width: 0.8, depth: 0.4, thickness: 0.02, material: 'wood' } }
+├── clamp-bl-1       { type: 'crossClamp', position: [0,0,0], rotation: [0,0,0], params: { rodDiameter: 8 } }
+├── clamp-br-1       { type: 'crossClamp', position: [0.8,0,0], rotation: [0,0,0], params: { rodDiameter: 8 } }
 ├── ... (每个层板-光轴交叉点一个 clamp)
 ```
 
@@ -196,6 +213,7 @@ root (group)
 - **模板 = 纯函数**：无副作用，参数变化时重新生成整棵树，保证一致性
 - **JSON 序列化**：保存就是 `JSON.stringify(sceneGraph)`，加载时通过 Zod schema 校验
 - **扁平场景树**：模板和自由搭建模式统一使用扁平 children 结构，简化渲染和操作逻辑
+- **无 scale 属性**：组件尺寸完全由 params 控制（如 rod.length、shelf.width），不支持非等比缩放。Phase 2 自由模式下，调整尺寸必须通过属性面板修改 params，不提供拖拽 scale handles。这是有意简化——模块化组件有固定规格，自由缩放不符合物理约束。
 
 ## 5. 数据库 Schema
 
@@ -233,7 +251,7 @@ model Design {
 | GET | `/api/designs?page=1&limit=20` | 获取当前用户设计列表（分页） |
 | GET | `/api/designs/:id` | 获取单个设计 |
 | POST | `/api/designs` | 创建新设计，body: `{ name, templateId?, sceneGraph }` |
-| PUT | `/api/designs/:id` | 全量更新设计，body: `{ name?, sceneGraph, thumbnail? }` |
+| PATCH | `/api/designs/:id` | 部分更新设计，body: `{ name?, sceneGraph?, thumbnail? }`（省略的字段不修改） |
 | DELETE | `/api/designs/:id` | 删除设计 |
 | GET | `/api/templates` | 获取模板元数据列表（不含 generate 函数） |
 
@@ -258,6 +276,11 @@ model Design {
 
 JWT 鉴权中间件保护 `/api/designs/*` 端点。
 
+**权限校验规则**：
+- `GET/PATCH/DELETE /api/designs/:id`：`withAuth` 中间件提取 userId 后，
+  必须校验 `design.userId === req.userId`，否则返回 403 `DESIGN_FORBIDDEN`
+- 所有 `/api/designs/*` 端点仅返回当前用户的数据
+
 ## 7. 前端架构
 
 ### 7.1 页面结构
@@ -279,6 +302,10 @@ interface EditorStore {
   sceneGraph: SceneNode
   selectedNodeId: string | null
   mode: 'template' | 'freeform'
+
+  // 模板状态（模板模式下维护，自由模式下为 null）
+  templateId: string | null
+  templateParams: TemplateParams | null
 
   // 历史（undo/redo）
   past: SceneNode[]
@@ -330,7 +357,7 @@ interface EditorStore {
   → 调整尺寸参数 → updateTemplateParams() 重新生成
   → 点击组件 → selectNode() → 右侧显示属性
   → 修改属性 → updateNode() 生成新树 → R3F 重新渲染
-  → 点击保存 → PUT /api/designs/:id
+  → 点击保存 → PATCH /api/designs/:id
 ```
 
 **Phase 2 — 自由搭建模式**：
@@ -361,10 +388,10 @@ const componentRegistry = {
 
 ```tsx
 function SceneRenderer({ node }: { node: SceneNode }) {
-  const MeshComponent = componentRegistry[node.type]
+  const MeshComponent = node.type !== 'group' ? componentRegistry[node.type] : null
   return (
     <group position={node.position} rotation={node.rotation}>
-      <MeshComponent params={node.params} nodeId={node.id} />
+      {MeshComponent && <MeshComponent params={node.params} nodeId={node.id} />}
       {node.children.map(child => (
         <SceneRenderer key={child.id} node={child} />
       ))}
@@ -466,20 +493,11 @@ interface SnapPoint {
 
 ### 11.1 Undo/Redo
 
-```typescript
-interface HistoryManager {
-  past: SceneNode[]
-  future: SceneNode[]
-  maxHistory: 50
-  push: (scene: SceneNode) => void
-  undo: () => SceneNode | null
-  redo: () => SceneNode | null
-}
-```
+通过 Zustand EditorStore 的 `past`/`future` 数组实现（见 Section 7.2）。每次编辑将当前 sceneGraph 推入 `past`，上限 50 条，超出丢弃最旧快照。`undo` 将当前 sceneGraph 推入 `future` 并从 `past` 弹出恢复；`redo` 反向操作。
 
 ### 11.2 自动保存
 
-- 防抖 3 秒：编辑后 3 秒无操作触发 `PUT /api/designs/:id`
+- 防抖 3 秒：编辑后 3 秒无操作触发 `PATCH /api/designs/:id`
 - 离线兜底：每次编辑同时写 `localStorage`，下次打开提示恢复
 
 ### 11.3 缩略图生成
@@ -489,6 +507,7 @@ interface HistoryManager {
 - 截图前将 canvas 缩放到 400x300（避免大图）
 - base64 字符串上限 200KB，超限则降低质量重试
 - `GET /api/designs` 列表接口不返回 thumbnail 字段（仅 `GET /api/designs/:id` 返回），避免列表响应过大
+- **API 返回格式**：`thumbnail` 字段始终返回可直接用于 `<img src>` 的 URL。MVP 阶段为 `data:image/jpeg;base64,...` data URL，后续迁移对象存储时改为 HTTPS URL，前端代码无需变更
 
 ### 11.4 视角控制
 
@@ -519,7 +538,7 @@ interface HistoryManager {
 ```
 
 - JWT 有效期 7 天，存 **httpOnly cookie**（浏览器自动携带，无需手动 Authorization header）
-- 需配置 CSRF 保护（SameSite=Strict 或 CSRF token）
+- 需配置 CSRF 保护：Cookie 设置 `SameSite=Lax`；所有 state-mutating API（POST/PATCH/DELETE）要求 `Content-Type: application/json`，服务端校验此 header——浏览器表单提交无法伪造 JSON content-type，天然防御 CSRF
 - 登录接口速率限制：同一 IP 每分钟最多 5 次失败尝试，超限返回 429
 - 注册接口速率限制：同一 IP 每小时最多 10 次，超限返回 429
 - 密码最少 8 位，邮箱格式校验
@@ -550,6 +569,15 @@ model User {
 - 同一用户可同时绑定邮箱和微信，通过 unionid/邮箱关联
 - 小程序端不支持 httpOnly cookie，改用 Authorization header + token 存 storage
 - API 中间件 `withAuth` 同时支持 cookie 和 header 两种传输方式
+
+### 12.2 环境变量
+
+| 变量 | 必须 | 说明 |
+|------|------|------|
+| `JWT_SECRET` | 是 | JWT 签名密钥，≥ 32 字符随机字符串（256-bit 熵） |
+| `DATABASE_URL` | 是 | SQLite 路径，如 `file:./dev.db` |
+
+应用启动时校验必须变量存在，缺失则 fail fast 并输出明确错误信息。项目根目录提供 `.env.example` 作为模板。
 
 ## 13. 错误处理
 
@@ -656,3 +684,201 @@ model User {
 - 模板生成函数（纯函数，零平台依赖）
 - 场景树操作工具函数（节点增删改查、深拷贝）
 - API 接口定义和响应类型
+
+## 16. Docker 开发与部署环境
+
+**核心原则**：开发期间所有 runtime（Node.js、pnpm、Prisma CLI）运行在 Docker 容器内，本机只需编辑器，不安装任何项目依赖。开发和生产共用同一份 Dockerfile，通过 multi-stage + target 切换。
+
+### 16.1 环境总览
+
+| 环境 | 方案 | 说明 |
+|------|------|------|
+| 开发 | `docker compose up` | Bind mount 源码 + named volume 隔离 node_modules |
+| 生产（MVP） | 单台 VPS（Fly.io / Railway） | `docker compose -f docker-compose.prod.yml up` |
+| 生产（后续） | 同上或迁移 Turso / PostgreSQL | 按用户量决定 |
+
+**不使用 Vercel/Netlify**：serverless 函数无持久文件系统，SQLite 无法可靠写入。
+
+### 16.2 Dockerfile（多阶段构建）
+
+```dockerfile
+# ---- Base: 所有阶段共享 ----
+FROM node:22-slim AS base
+RUN corepack enable && corepack prepare pnpm@latest --activate
+WORKDIR /app
+
+# ---- Dependencies: 依赖安装层（缓存优化） ----
+FROM base AS deps
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
+COPY packages/core/package.json packages/core/
+COPY packages/web/package.json packages/web/
+RUN pnpm install --frozen-lockfile
+
+# ---- Dev: 开发目标 ----
+FROM base AS dev
+# dev 阶段不 COPY 源码，通过 bind mount 挂载
+# node_modules 通过 named volume 从 deps 阶段同步
+EXPOSE 3000
+CMD ["pnpm", "--filter", "web", "dev"]
+
+# ---- Build: 生产构建 ----
+FROM deps AS build
+COPY . .
+RUN pnpm --filter web exec prisma generate
+RUN pnpm --filter web build
+
+# ---- Production: 最小化生产镜像 ----
+FROM base AS production
+ENV NODE_ENV=production
+COPY --from=build /app/packages/web/.next/standalone ./
+COPY --from=build /app/packages/web/.next/static ./.next/static
+COPY --from=build /app/packages/web/public ./public
+COPY --from=build /app/packages/web/prisma ./prisma
+EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost:3000/api/health || exit 1
+CMD ["node", "server.js"]
+```
+
+**优化要点**：
+- `node:22-slim`：比 alpine 更兼容（Prisma 需要 glibc），比 full 镜像小 ~600MB
+- 依赖层独立：`pnpm-lock.yaml` 不变时跳过 install，rebuild 秒级
+- 生产镜像仅含 `standalone` 输出（Next.js `output: 'standalone'`），~150MB
+
+### 16.3 docker-compose.yml（开发环境）
+
+```yaml
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - "3000:3000"
+    volumes:
+      # 源码 bind mount：本机编辑，容器热更新
+      - .:/app
+      # named volume 隔离 node_modules，不污染本机
+      - node_modules:/app/node_modules
+      - node_modules_core:/app/packages/core/node_modules
+      - node_modules_web:/app/packages/web/node_modules
+      # SQLite 数据持久化
+      - sqlite_data:/app/data
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=file:/app/data/dev.db
+    env_file:
+      - .env
+    entrypoint: ["/app/scripts/docker-entrypoint.sh"]
+
+volumes:
+  node_modules:
+  node_modules_core:
+  node_modules_web:
+  sqlite_data:
+```
+
+**关键设计**：
+- **Bind mount `.:/app`**：本机编辑器（Claude Code / VSCode）修改代码，容器内 Next.js dev server 自动热更新
+- **Named volume 覆盖 node_modules**：避免 bind mount 把本机空的 node_modules 覆盖容器内已安装的依赖，也防止 Linux 容器的 native 模块（如 Prisma engine）泄漏到 macOS 本机
+- **sqlite_data volume**：SQLite 文件持久化，容器重建不丢数据
+
+### 16.4 docker-compose.prod.yml（生产部署）
+
+```yaml
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "3000:3000"
+    volumes:
+      - sqlite_data:/app/data
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:/app/data/prod.db
+    env_file:
+      - .env.production
+    restart: unless-stopped
+
+volumes:
+  sqlite_data:
+```
+
+### 16.5 入口脚本
+
+```bash
+#!/bin/sh
+# scripts/docker-entrypoint.sh
+set -e
+
+echo "Installing dependencies..."
+pnpm install
+
+echo "Running Prisma migrations..."
+pnpm --filter web exec prisma migrate dev --skip-generate 2>/dev/null || \
+  pnpm --filter web exec prisma migrate deploy
+
+echo "Generating Prisma client..."
+pnpm --filter web exec prisma generate
+
+echo "Starting dev server..."
+exec pnpm --filter web dev
+```
+
+每次 `docker compose up` 自动执行：依赖安装（增量，有缓存时秒级）→ 数据库迁移 → Prisma 生成 → 启动 dev server。
+
+### 16.6 辅助文件
+
+**.dockerignore**：
+```
+node_modules
+.next
+.git
+*.md
+.DS_Store
+data/*.db
+.env.production
+```
+
+**.env.example**：
+```bash
+JWT_SECRET=change-me-to-a-random-string-at-least-32-chars
+DATABASE_URL=file:/app/data/dev.db
+```
+
+### 16.7 开发者工作流
+
+```bash
+# 首次启动（构建镜像 + 安装依赖 + 迁移 + 启动）
+docker compose up --build
+
+# 日常开发（容器后台运行，本机编辑代码即可）
+docker compose up -d
+# 编辑代码 → 浏览器 localhost:3000 自动热更新
+
+# 执行容器内命令（如添加依赖、运行测试）
+docker compose exec web pnpm add zod --filter core
+docker compose exec web pnpm test
+docker compose exec web pnpm --filter web exec prisma studio
+
+# 重建（Dockerfile 或依赖变更后）
+docker compose up --build
+
+# 清理
+docker compose down           # 停止，保留数据
+docker compose down -v        # 停止 + 删除 volumes（含数据库）
+```
+
+### 16.8 迁移至生产服务器
+
+```bash
+# 服务器上
+git clone <repo>
+cp .env.example .env.production  # 编辑生产环境变量
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+生产镜像直接构建 `production` target，不挂载源码，不安装 devDependencies，镜像体积最小化。
