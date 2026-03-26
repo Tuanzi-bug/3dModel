@@ -3,8 +3,18 @@ import { loginSchema } from '@3d-modeler/core'
 import { prisma } from '@/lib/prisma'
 import { verifyPassword, signToken } from '@/lib/auth'
 import { cookies } from 'next/headers'
+import { loginLimiter } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
+  // Check rate limit before processing
+  const ip = request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip') ?? 'unknown'
+  if (loginLimiter.isBlocked(ip)) {
+    return NextResponse.json(
+      { success: false, error: { code: 'AUTH_RATE_LIMITED', message: 'Too many failed attempts, try again later' } },
+      { status: 429 },
+    )
+  }
+
   const contentType = request.headers.get('content-type')
   if (!contentType?.includes('application/json')) {
     return NextResponse.json(
@@ -26,6 +36,7 @@ export async function POST(request: NextRequest) {
 
   const user = await prisma.user.findUnique({ where: { email } })
   if (!user || !(await verifyPassword(password, user.passwordHash))) {
+    loginLimiter.hit(ip) // Count only FAILED attempts
     return NextResponse.json(
       { success: false, error: { code: 'AUTH_INVALID_CREDENTIALS', message: 'Invalid email or password' } },
       { status: 401 },

@@ -3,8 +3,20 @@ import { registerSchema } from '@3d-modeler/core'
 import { prisma } from '@/lib/prisma'
 import { hashPassword, signToken } from '@/lib/auth'
 import { cookies } from 'next/headers'
+import { registerLimiter } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
+  // Check rate limit before processing (counts all attempts)
+  const ip = request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip') ?? 'unknown'
+  if (registerLimiter.isBlocked(ip)) {
+    return NextResponse.json(
+      { success: false, error: { code: 'AUTH_RATE_LIMITED', message: 'Too many registration attempts, try again later' } },
+      { status: 429 },
+    )
+  }
+
+  registerLimiter.hit(ip) // Count all attempts (before processing)
+
   const contentType = request.headers.get('content-type')
   if (!contentType?.includes('application/json')) {
     return NextResponse.json(
