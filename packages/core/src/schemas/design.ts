@@ -10,7 +10,7 @@ export const createDesignSchema = z.object({
 export const updateDesignSchema = z.object({
   name: z.string().min(1).max(255).optional(),
   sceneGraph: sceneNodeSchema.optional(),
-  thumbnail: z.string().nullable().optional(),
+  thumbnail: z.string().max(2_000_000).nullable().optional(),
 })
 
 export type CreateDesignInput = z.infer<typeof createDesignSchema>
