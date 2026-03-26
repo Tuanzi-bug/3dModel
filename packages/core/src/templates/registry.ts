@@ -18,3 +18,7 @@ export function getTemplateMetadata(): TemplateMetadata[] {
     defaultParams: t.defaultParams,
   }))
 }
+
+export function getTemplateById(id: string): TemplateDefinition | undefined {
+  return templateRegistry[id]
+}
