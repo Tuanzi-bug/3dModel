@@ -7,10 +7,31 @@ export class RateLimiter {
   private store = new Map<string, RateLimitEntry>()
   private windowMs: number
   private max: number
+  private cleanupInterval: NodeJS.Timeout | null = null
 
   constructor(opts: { windowMs: number; max: number }) {
     this.windowMs = opts.windowMs
     this.max = opts.max
+    // Cleanup expired entries every hour to prevent memory leak
+    this.cleanupInterval = setInterval(() => this.cleanup(), 3_600_000)
+  }
+
+  /** Remove expired entries from store */
+  private cleanup(): void {
+    const now = Date.now()
+    for (const [key, entry] of this.store.entries()) {
+      if (now > entry.resetAt) {
+        this.store.delete(key)
+      }
+    }
+  }
+
+  /** Stop cleanup interval (for testing/shutdown) */
+  destroy(): void {
+    if (this.cleanupInterval) {
+      clearInterval(this.cleanupInterval)
+      this.cleanupInterval = null
+    }
   }
 
   /** Record a failed attempt for this key */

@@ -7,7 +7,9 @@ import { registerLimiter } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
   // Check rate limit before processing (counts all attempts)
-  const ip = request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip') ?? 'unknown'
+  // Parse x-forwarded-for: leftmost IP is the real client IP
+  const forwardedFor = request.headers.get('x-forwarded-for')
+  const ip = forwardedFor?.split(',')[0]?.trim() ?? request.headers.get('x-real-ip') ?? 'unknown'
   if (registerLimiter.isBlocked(ip)) {
     return NextResponse.json(
       { success: false, error: { code: 'AUTH_RATE_LIMITED', message: 'Too many registration attempts, try again later' } },
