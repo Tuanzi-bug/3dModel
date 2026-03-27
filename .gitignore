@@ -12,3 +12,10 @@ data/
 # pnpm
 .pnpm-store
 .pnpm-debug.log
+
+# Test coverage reports
+coverage
+*.lcov
+
+# Superpowers brainstorm cache
+.superpowers
