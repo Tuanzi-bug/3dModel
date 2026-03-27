@@ -19,9 +19,9 @@ test.describe('登录页', () => {
     await expect(page.getByText('ShelfCraft')).toBeVisible()
     await expect(page.getByText('欢迎回来')).toBeVisible()
 
-    // 表单字段
-    await expect(page.getByLabel('邮箱')).toBeVisible()
-    await expect(page.getByLabel('密码')).toBeVisible()
+    // 表单字段 - 使用 ID 选择器避免冲突
+    await expect(page.locator('#email')).toBeVisible()
+    await expect(page.locator('#password')).toBeVisible()
 
     // placeholder 中文
     await expect(page.getByPlaceholder('请输入邮箱')).toBeVisible()
@@ -35,7 +35,7 @@ test.describe('登录页', () => {
   })
 
   test('密码可视化切换', async ({ page }) => {
-    const passwordInput = page.getByLabel('密码')
+    const passwordInput = page.locator('#password')
     const toggleBtn = page.getByRole('button', { name: '显示密码' })
 
     // 默认隐藏
@@ -58,8 +58,8 @@ test.describe('登录页', () => {
   })
 
   test('邮箱或密码错误时显示错误信息', async ({ page }) => {
-    await page.getByLabel('邮箱').fill('nonexistent@example.com')
-    await page.getByLabel('密码').fill('wrongpassword')
+    await page.locator('#email').fill('nonexistent@example.com')
+    await page.locator('#password').fill('wrongpassword')
     await page.getByRole('button', { name: '登录' }).click()
 
     // 等待错误信息出现（API 返回失败）
@@ -74,8 +74,8 @@ test.describe('登录页', () => {
       await route.continue()
     })
 
-    await page.getByLabel('邮箱').fill('test@example.com')
-    await page.getByLabel('密码').fill('password123')
+    await page.locator('#email').fill('test@example.com')
+    await page.locator('#password').fill('password123')
     await page.getByRole('button', { name: '登录' }).click()
 
     // 按钮应变为「登录中…」且禁用
@@ -101,10 +101,10 @@ test.describe('注册页', () => {
     await expect(page.getByText('ShelfCraft')).toBeVisible()
     await expect(page.getByText('创建账号')).toBeVisible()
 
-    // 表单字段
-    await expect(page.getByLabel('邮箱')).toBeVisible()
-    await expect(page.getByLabel('密码')).toBeVisible()
-    await expect(page.getByLabel('确认密码')).toBeVisible()
+    // 表单字段 - 使用 ID 选择器避免冲突
+    await expect(page.locator('#email')).toBeVisible()
+    await expect(page.locator('#password')).toBeVisible()
+    await expect(page.locator('#confirmPassword')).toBeVisible()
 
     // placeholder 中文
     await expect(page.getByPlaceholder('请输入邮箱')).toBeVisible()
@@ -119,7 +119,7 @@ test.describe('注册页', () => {
   })
 
   test('密码字段可视化切换（密码）', async ({ page }) => {
-    const passwordInput = page.getByLabel('密码')
+    const passwordInput = page.locator('#password')
     // 共两个「显示密码」按钮（密码+确认密码），取第一个
     const toggleBtns = page.getByRole('button', { name: '显示密码' })
 
@@ -129,7 +129,7 @@ test.describe('注册页', () => {
   })
 
   test('确认密码字段可视化切换', async ({ page }) => {
-    const confirmInput = page.getByLabel('确认密码')
+    const confirmInput = page.locator('#confirmPassword')
     const toggleBtns = page.getByRole('button', { name: '显示密码' })
 
     await expect(confirmInput).toHaveAttribute('type', 'password')
@@ -138,9 +138,9 @@ test.describe('注册页', () => {
   })
 
   test('两次密码不一致时显示错误', async ({ page }) => {
-    await page.getByLabel('邮箱').fill('user@example.com')
-    await page.getByLabel('密码').fill('password123')
-    await page.getByLabel('确认密码').fill('different456')
+    await page.locator('#email').fill('user@example.com')
+    await page.locator('#password').fill('password123')
+    await page.locator('#confirmPassword').fill('different456')
     await page.getByRole('button', { name: '注册' }).click()
 
     await expect(page.getByText('两次输入的密码不一致')).toBeVisible()
@@ -158,9 +158,9 @@ test.describe('注册页', () => {
     })
 
     const email = randomEmail()
-    await page.getByLabel('邮箱').fill(email)
-    await page.getByLabel('密码').fill('password123')
-    await page.getByLabel('确认密码').fill('password123')
+    await page.locator('#email').fill(email)
+    await page.locator('#password').fill('password123')
+    await page.locator('#confirmPassword').fill('password123')
     await page.getByRole('button', { name: '注册' }).click()
 
     await expect(page.getByRole('button', { name: /注册中/ })).toBeDisabled()
@@ -177,9 +177,9 @@ test.describe('注册页', () => {
     )
 
     const email = randomEmail()
-    await page.getByLabel('邮箱').fill(email)
-    await page.getByLabel('密码').fill('password123')
-    await page.getByLabel('确认密码').fill('password123')
+    await page.locator('#email').fill(email)
+    await page.locator('#password').fill('password123')
+    await page.locator('#confirmPassword').fill('password123')
     await page.getByRole('button', { name: '注册' }).click()
 
     await expect(page).toHaveURL('/dashboard', { timeout: 8000 })
