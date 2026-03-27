@@ -1,0 +1,99 @@
+# Session: 2026-03-25
+
+**Started:** ~16:15
+**Last Updated:** ~16:45
+**Project:** /Users/yay/Desktop/project/AI/3dModel (branch: feat/phase1-mvp)
+**Topic:** Task 8 — Auth API Routes (register, login, logout, health) for Phase 1 MVP
+
+---
+
+## What We Are Building
+
+A template-based 3D modular shelf designer (Phase 1 MVP). The project is a monorepo with `packages/core` (types, schemas, templates, utils) and `packages/web` (Next.js 15 App Router + R3F + Zustand + Prisma/SQLite).
+
+This session implemented **Task 8: Auth API Routes** — the four HTTP route handlers that expose the JWT+bcrypt auth system (built in Task 7) as REST endpoints:
+
+- `POST /api/auth/register` — create user, sign JWT, set httpOnly cookie
+- `POST /api/auth/login` — verify credentials, sign JWT, set httpOnly cookie
+- `POST /api/auth/logout` — delete token cookie
+- `GET /api/health` — liveness check
+
+Also fixed a pre-existing bug: `@types/node` was missing from `web/package.json`, causing TypeScript errors on `process.env` across `env.ts`, `prisma.ts`, and the new routes.
+
+---
+
+## What WORKED (with evidence)
+
+- **Task 8 auth API routes** — confirmed by: 8/8 Vitest tests pass (`pnpm --filter web test`), `tsc --noEmit` exits clean, committed as `fe6bf95`
+- **`@types/node` fix** — confirmed by: `tsc --noEmit` previously errored on `process`, now exits with no output (zero errors)
+- **All prior tasks remain green** — 8/8 total web tests still pass after Task 8
+
+---
+
+## What Did NOT Work (and why)
+
+No failed approaches this session — routes were implemented directly from the plan spec and passed first run.
+
+---
+
+## What Has NOT Been Tried Yet
+
+- **Task 9: Rate Limiting** — `src/lib/rate-limit.ts` in-memory limiter + `src/__tests__/lib/rate-limit.test.ts`, then integrate `loginLimiter` into login route and `registerLimiter` into register route
+- **Tasks 10-23** — designs API, editor store, UI components, R3F viewport, E2E tests, etc.
+
+---
+
+## Current State of Files
+
+| File | Status | Notes |
+| ---- | ------ | ----- |
+| `packages/web/src/app/api/health/route.ts` | Complete | GET -> `{ status: 'ok' }` |
+| `packages/web/src/app/api/auth/register/route.ts` | Complete | Validate with registerSchema, hash pw, create user, sign JWT, set httpOnly cookie |
+| `packages/web/src/app/api/auth/login/route.ts` | Complete | Validate with loginSchema, verify pw, sign JWT, set httpOnly cookie |
+| `packages/web/src/app/api/auth/logout/route.ts` | Complete | Deletes token cookie |
+| `packages/web/src/__tests__/api/auth.test.ts` | Complete | 1 test: register->login->verify token flow (logic-level, mocks Prisma) |
+| `packages/web/package.json` | Complete | Added "@types/node": "^20" to devDependencies |
+
+---
+
+## Decisions Made
+
+- **Logic-level test (not HTTP-layer)** — the auth API test mocks Prisma and tests auth functions directly rather than using NextRequest/NextResponse; HTTP-layer testing deferred to E2E tests in Phase F. Reason: simpler, faster, no Next.js test harness needed.
+- **`// @vitest-environment node` on all jose tests** — any test file importing `signToken`/`verifyToken` must have this pragma; jsdom sandboxes Uint8Array, breaking jose's `instanceof` check internally.
+- **`issues[0]?.message ?? 'Invalid input'`** — used optional chaining on Zod error message access to avoid potential undefined access.
+
+---
+
+## Blockers & Open Questions
+
+No active blockers.
+
+---
+
+## Exact Next Step
+
+**Task 9: Rate Limiting**
+
+1. Write failing tests first at `packages/web/src/__tests__/lib/rate-limit.test.ts`:
+   - `hit()` increments count and returns current count
+   - `isBlocked()` returns true after threshold exceeded
+   - `reset()` clears state
+   - TTL expiry (count resets after window)
+
+2. Implement `packages/web/src/lib/rate-limit.ts` -- in-memory Map-based limiter with sliding window.
+
+3. Integrate into routes per plan:
+   - Login route: `loginLimiter.hit(ip)` + `loginLimiter.isBlocked(ip)` gate (5 attempts / 15 min per IP)
+   - Register route: similar with `registerLimiter`
+
+4. Run: `docker compose run --rm --no-deps --entrypoint="" web pnpm --filter web test`
+
+---
+
+## Environment & Setup Notes
+
+- **All commands must run inside Docker**: `docker compose run --rm --no-deps --entrypoint="" web <cmd>`
+- Tests: `pnpm --filter web test` or `pnpm --filter core test`
+- TypeScript: `pnpm --filter web exec tsc --noEmit`
+- DB volume: `sqlite_data`, path inside container: `/app/data/dev.db`
+- `jose` JWT needs Node.js env: add `// @vitest-environment node` to any test using `signToken`/`verifyToken`

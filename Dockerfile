@@ -17,6 +17,20 @@ FROM base AS dev
 EXPOSE 3000
 CMD ["pnpm", "--filter", "web", "dev"]
 
+# ---- E2E: Playwright 测试环境 ----
+# 基于官方 Playwright 镜像，内置 Chromium 及所有系统依赖
+FROM mcr.microsoft.com/playwright:v1.58.2-noble AS e2e
+# 接收构建时代理参数（用于 apt-get 等网络操作）
+ARG http_proxy
+ARG https_proxy
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
+WORKDIR /app
+# node_modules 通过 bind mount 从宿主卷挂载，不在此安装
+# 工作目录、源码、node_modules 均由 docker-compose 挂载
+CMD ["pnpm", "--filter", "web", "test:e2e"]
+
 # ---- Build: 生产构建 ----
 FROM deps AS build
 COPY . .
@@ -33,3 +47,4 @@ COPY --from=build /app/packages/web/prisma ./prisma
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://localhost:3000/api/health || exit 1
 CMD ["node", "server.js"]
+

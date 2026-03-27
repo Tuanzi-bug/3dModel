@@ -21,9 +21,47 @@ services:
     env_file:
       - .env
     entrypoint: ["/app/scripts/docker-entrypoint.sh"]
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 30s
+
+  e2e:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: e2e
+      args:
+        http_proxy: http://host.docker.internal:7890
+        https_proxy: http://host.docker.internal:7890
+        HTTP_PROXY: http://host.docker.internal:7890
+        HTTPS_PROXY: http://host.docker.internal:7890
+    volumes:
+      # 共享源码和 node_modules（与 web service 相同的 volumes）
+      - .:/app
+      - node_modules:/app/node_modules
+      - node_modules_core:/app/packages/core/node_modules
+      - node_modules_web:/app/packages/web/node_modules
+    environment:
+      - NODE_ENV=test
+      - BASE_URL=http://web:3000
+      - DATABASE_URL=file:/app/data/dev.db
+      # Playwright 在容器内运行，不需要 DISPLAY
+      - PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+    env_file:
+      - .env
+    depends_on:
+      web:
+        condition: service_healthy
+    # 不自动启动，按需运行：docker compose run --rm e2e
+    profiles:
+      - e2e
 
 volumes:
   node_modules:
   node_modules_core:
   node_modules_web:
   sqlite_data:
+
