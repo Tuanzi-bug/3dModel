@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json({
     success: true,
-    data: designs.map((d) => ({
+    data: designs.map((d: { createdAt: Date; updatedAt: Date; [key: string]: unknown }) => ({
       ...d,
       createdAt: d.createdAt.toISOString(),
       updatedAt: d.updatedAt.toISOString(),
