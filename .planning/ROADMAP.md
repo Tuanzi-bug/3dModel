@@ -37,7 +37,12 @@ Before GSD initialization, the codebase already implements the equivalent of a s
   1. User can reopen a saved design and continue editing the persisted scene and basic component properties without hidden state drift.
   2. The existing dashboard entry → editor → save/autosave → reopen flow behaves consistently across core save/load paths, whether the design started from a preset template entry or not.
   3. The team has a dependable automated verification path for the current MVP before Phase 2 work starts.
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Make persisted scene state the only source of truth for create/open/reopen editor flows
+- [ ] 01-02-PLAN.md — Align dashboard and editor chrome with the approved preset-entry UI contract
+- [ ] 01-03-PLAN.md — Add automated regression coverage for save/reopen continuity
 
 ### Phase 2: Freeform Builder
 **Goal**: Let users create and manipulate modular shelf structures directly in the editor without depending on a template-first workflow.
@@ -81,7 +86,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. MVP Hardening & Consistency | 0/TBD | Not started | - |
+| 1. MVP Hardening & Consistency | 0/3 | Not started | - |
 | 2. Freeform Builder | 0/TBD | Not started | - |
 | 3. Smart Snapping & Output | 0/TBD | Not started | - |
 | 4. WeChat Mini-Program | 0/TBD | Not started | - |
