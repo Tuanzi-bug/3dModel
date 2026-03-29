@@ -20,7 +20,7 @@
     "@radix-ui/react-slider": "^1",
     "@radix-ui/react-toast": "^1",
     "@react-three/drei": "^9",
-    "@react-three/fiber": "^8",
+    "@react-three/fiber": "^9.5.0",
     "@react-three/postprocessing": "^2",
     "bcryptjs": "^2",
     "jose": "^5",
