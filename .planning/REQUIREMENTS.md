@@ -9,9 +9,9 @@ Requirements for the next execution roadmap, starting from the current brownfiel
 
 ### Reliability
 
-- [ ] **RELI-01**: User can reopen a saved template-based design and continue editing without template parameters silently resetting to defaults
-- [ ] **RELI-02**: User can use the current core flow (login → choose template → edit → autosave → reopen) without data-consistency regressions across save/load/edit paths
-- [ ] **RELI-03**: User can trust that the template-based MVP remains stable while new phases are added on top of it
+- [ ] **RELI-01**: User can reopen a saved design and continue editing the persisted scene graph and component properties without hidden resets or template-driven drift
+- [ ] **RELI-02**: User can use the current core flow (dashboard entry → edit → save/autosave → reopen) without data-consistency regressions across save/load/edit paths
+- [ ] **RELI-03**: User can trust that the current editor MVP remains stable while new phases are added on top of it, backed by automated regression coverage for the core flow
 
 ### Freeform Builder
 

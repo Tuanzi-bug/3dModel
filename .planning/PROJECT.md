@@ -2,7 +2,7 @@
 
 ## What This Is
 
-ShelfCraft is a browser-based 3D modular shelf design tool for quickly producing shelving, display, and storage structures without installing desktop CAD software. The current brownfield codebase already delivers a usable template-first web MVP, and the next work is to harden that baseline before expanding into freeform building, precision workflows, and a WeChat mini-program.
+ShelfCraft is a browser-based 3D modular shelf design tool for quickly producing shelving, display, and storage structures without installing desktop CAD software. The current brownfield codebase already delivers a usable web MVP with template entry points and direct component editing, and the next work is to harden that baseline before expanding into broader freeform building, precision workflows, and a WeChat mini-program.
 
 ## Core Value
 
@@ -20,7 +20,7 @@ Users can quickly create, save, reopen, and refine modular shelf designs in a vi
 
 ### Active
 
-- [ ] Stabilize the current template-based MVP so saved/reopened editing flows stay consistent before adding major new scope
+- [ ] Stabilize the current editor core flow and reduce template-specific coupling so saved/reopened editing flows stay consistent before adding major new scope
 - [ ] Add full freeform building mode for composing designs without starting from a template
 - [ ] Add snapping, advanced components, dimension aids, preset views, and BOM export
 - [ ] Reuse the shared core logic in a WeChat mini-program client
@@ -37,7 +37,7 @@ Users can quickly create, save, reopen, and refine modular shelf designs in a vi
 - Brownfield mapping already exists in `.planning/codebase/` and shows the current implementation is a Next.js 15 + React 19 + R3F + Zustand + Prisma/SQLite monorepo
 - The codebase already contains a functioning template-first editor baseline: auth routes, designs CRUD, dashboard, editor pages, autosave, undo/redo, viewport controls, shared templates, and tests
 - The Phase 1 plan document is partially stale: several later UI/editor/E2E tasks remain unchecked in the plan doc even though corresponding code now exists in `packages/web/src/` and `packages/web/tests/e2e/`
-- Current technical concerns worth addressing before scope expansion include template parameter persistence drift on reload, mixed node-ID strategies, and `@ts-nocheck` in core R3F editor rendering files
+- Current technical concerns worth addressing before scope expansion include template-specific editor coupling obscuring the core save/reopen model, mixed node-ID strategies, and `@ts-nocheck` in core R3F editor rendering files
 
 ## Constraints
 
@@ -55,7 +55,8 @@ Users can quickly create, save, reopen, and refine modular shelf designs in a vi
 | Use an immutable JSON scene graph as the canonical design model | It already supports template generation, serialization, and undo/redo cleanly | ✓ Good |
 | Keep custom email/password + JWT cookie auth for the current web baseline | It is already working and is sufficient until cross-platform auth needs force a redesign | ⚠️ Revisit |
 | Treat the current codebase as a brownfield MVP baseline, not a greenfield project | Existing functionality is substantial enough that GSD should organize around current reality instead of re-planning from zero | ✓ Good |
-| Start the first GSD execution phase with MVP hardening before freeform expansion | The current editor already works, but unresolved consistency/quality issues would make Phase 2 riskier if left alone | — Pending |
+| Start the first GSD execution phase with MVP hardening before freeform expansion | The current editor already works, but unresolved consistency/quality issues would make Phase 2 riskier if left alone | ✓ Good |
+| Treat templates as preset scene entry points during Phase 1, not as a first-class editing system | The core product priority is dependable custom editing, not template parameter fidelity | ✓ Good |
 
 ## Evolution
 
