@@ -35,7 +35,7 @@ function generate(params: TemplateParams): SceneNode {
 
 export const singleShelfTemplate: TemplateDefinition = {
   id: 'single-shelf',
-  name: 'Single Shelf',
+  name: '单层货架',
   category: 'single',
   thumbnail: '',
   defaultParams: {

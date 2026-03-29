@@ -62,7 +62,7 @@ function generate(params: TemplateParams): SceneNode {
 
 export const standaloneTemplate: TemplateDefinition = {
   id: 'standalone',
-  name: 'Standalone Shelf',
+  name: '独立货架',
   category: 'standalone',
   thumbnail: '',
   defaultParams: {

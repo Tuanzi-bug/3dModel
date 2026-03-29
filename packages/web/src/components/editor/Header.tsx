@@ -48,6 +48,7 @@ export function Header() {
         <button
           onClick={undo}
           disabled={past.length === 0}
+          aria-label="撤销"
           className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-slate-700
                    bg-white border border-slate-300 rounded-lg hover:bg-slate-50
                    disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
@@ -59,6 +60,7 @@ export function Header() {
         <button
           onClick={redo}
           disabled={future.length === 0}
+          aria-label="重做"
           className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-slate-700
                    bg-white border border-slate-300 rounded-lg hover:bg-slate-50
                    disabled:opacity-40 disabled:cursor-not-allowed transition-colors"

@@ -62,7 +62,7 @@ function generate(params: TemplateParams): SceneNode {
 
 export const multiShelfTemplate: TemplateDefinition = {
   id: 'multi-shelf',
-  name: 'Multi Shelf',
+  name: '多层货架',
   category: 'multi',
   thumbnail: '',
   defaultParams: {
