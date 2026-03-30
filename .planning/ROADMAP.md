@@ -110,7 +110,13 @@ Plans:
   1. User can drag components at a predictable pace and still get snap assistance when releasing near valid anchors or grid positions.
   2. User can open the exported BOM CSV directly in Excel without Chinese text turning into mojibake.
   3. User can click empty space to deselect without camera jumps, and can explicitly focus the selected component plus zoom in/out from the viewport chrome.
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 03.1-01-PLAN.md — Shift movement snapping to drag-release resolution
+- [ ] 03.1-02-PLAN.md — Make BOM CSV export Excel-safe without changing the file contract
+- [ ] 03.1-03-PLAN.md — Stabilize deselection and add explicit viewport focus/zoom controls
+- [ ] 03.1-04-PLAN.md — Lock the repaired precision workflow with browser regression coverage
 
 ### Phase 4: WeChat Mini-Program
 **Goal**: Extend the product to a WeChat mini-program while preserving shared core business logic across platforms.
@@ -134,5 +140,5 @@ Phases execute in numeric order: 1 → 2 → 2.1 → 3 → 3.1 → 4
 | 2. Freeform Builder | 4/4 | Completed | 2026-03-30 |
 | 2.1. Freeform Stability & Preview Polish | 4/4 | Completed | 2026-03-30 |
 | 3. Smart Snapping & Output | 4/4 | Completed | 2026-03-30 |
-| 3.1. Precision Usability Bugfixes | 0/TBD | Ready to plan | - |
+| 3.1. Precision Usability Bugfixes | 0/4 | Ready to execute | - |
 | 4. WeChat Mini-Program | 0/TBD | Not started | - |

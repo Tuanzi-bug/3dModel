@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: ready_to_plan
-stopped_at: Phase 03.1 context gathered
-last_updated: "2026-03-30T19:05:00+08:00"
-last_activity: 2026-03-30 -- Captured Phase 3.1 decisions for snap-on-release, Excel-safe CSV export, and viewport focus/zoom bugfixes
+status: ready_to_execute
+stopped_at: Phase 03.1 planned
+last_updated: "2026-03-30T20:10:00+08:00"
+last_activity: 2026-03-30 -- Planned Phase 3.1 across snap-on-release, Excel-safe CSV export, viewport focus/zoom controls, and regression coverage
 progress:
   total_phases: 6
   completed_phases: 4
-  total_plans: 0
+  total_plans: 4
   completed_plans: 0
   percent: 67
 ---
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 
 ## Current Position
 
-Phase: 03.1 (precision-usability-bugfixes) — READY TO PLAN
-Plan: 0 of 0
-Status: Phase 03.1 context gathered; ready to plan
-Last activity: 2026-03-30 -- Captured Phase 3.1 decisions for snap-on-release, Excel-safe CSV export, and viewport focus/zoom bugfixes
+Phase: 03.1 (precision-usability-bugfixes) — READY TO EXECUTE
+Plan: 0 of 4
+Status: Phase 03.1 planned; ready to execute
+Last activity: 2026-03-30 -- Planned Phase 3.1 across snap-on-release, Excel-safe CSV export, viewport focus/zoom controls, and regression coverage
 
 Progress: ███████░░░ 67%
 
@@ -80,6 +80,7 @@ Recent decisions affecting current work:
 - [Exec] Phase 3 snapping, bounds, and BOM rules now live in `packages/core` and drive both editor UX and export output
 - [Exec] Header export downloads BOM CSV directly from canonical sceneGraph data without server-side formatting
 - [Discuss] Phase 3.1 will change snapping to snap-on-release, keep BOM export as CSV with Excel-compatible encoding, and add explicit viewport focus/zoom controls without camera jumps on deselect
+- [Plan] Phase 3.1 is split into snap-release movement, Excel-safe BOM export, viewport camera recovery controls, and final browser regression coverage
 
 ### Pending Todos
 
@@ -92,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T19:05:00+08:00
-Stopped at: Phase 03.1 context gathered
-Resume file: .planning/phases/03.1-precision-usability-bugfixes/03.1-CONTEXT.md
+Last session: 2026-03-30T20:10:00+08:00
+Stopped at: Phase 03.1 planned
+Resume file: .planning/phases/03.1-precision-usability-bugfixes/03.1-01-PLAN.md
