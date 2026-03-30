@@ -26,6 +26,7 @@ Before GSD initialization, the codebase already implements the equivalent of a s
 - [x] **Phase 2.1: Freeform Stability & Preview Polish (INSERTED)** - Fix newly discovered freeform regressions and preview fidelity issues before precision work continues
 - [x] **Phase 3: Smart Snapping & Output** - Add precision assistance, advanced components, and BOM-oriented output
 - [x] **Phase 3.1: Precision Usability Bugfixes (INSERTED)** - Fix post-Phase-3 snapping feel, CSV export compatibility, and viewport focus/zoom regressions (completed 2026-03-30)
+- [ ] **Phase 3.2: Homepage 3D Preview & Web Adaptation (INSERTED)** - Complete the landing-page hero 3D preview before broader web adaptation and mini-program expansion
 - [ ] **Phase 4: WeChat Mini-Program** - Reuse the shared core model in a mini-program client
 
 ## Phase Details
@@ -118,9 +119,23 @@ Plans:
 - [x] 03.1-03-PLAN.md — Stabilize deselection and add explicit viewport focus/zoom controls
 - [x] 03.1-04-PLAN.md — Lock the repaired precision workflow with browser regression coverage
 
+### Phase 3.2: Homepage 3D Preview & Web Adaptation (INSERTED)
+**Goal**: Complete the landing-page hero 3D preview with a lightweight interactive scene before broader web adaptation and mini-program work begin.
+**Depends on**: Phase 3.1
+**Requirements**: TBD
+**UI hint**: yes
+**Success Criteria** (what must be TRUE):
+  1. The homepage hero replaces the static 3D placeholder with a lightweight interactive preview.
+  2. The preview supports slow auto-rotation plus user-controlled rotate/zoom interaction on desktop and mobile without introducing full editor-style controls.
+  3. Broader web adaptation and Phase 4 mini-program work stay deferred instead of expanding this inserted phase.
+**Plans**: TBD
+
+Plans:
+- [ ] TBD (run `$gsd-plan-phase 03.2` to break down)
+
 ### Phase 4: WeChat Mini-Program
 **Goal**: Extend the product to a WeChat mini-program while preserving shared core business logic across platforms.
-**Depends on**: Phase 3.1
+**Depends on**: Phase 3.2
 **Requirements**: [XPLT-01, XPLT-02, XPLT-03]
 **UI hint**: yes
 **Success Criteria** (what must be TRUE):
@@ -132,7 +147,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 2.1 → 3 → 3.1 → 4
+Phases execute in numeric order: 1 → 2 → 2.1 → 3 → 3.1 → 3.2 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -141,4 +156,5 @@ Phases execute in numeric order: 1 → 2 → 2.1 → 3 → 3.1 → 4
 | 2.1. Freeform Stability & Preview Polish | 4/4 | Completed | 2026-03-30 |
 | 3. Smart Snapping & Output | 4/4 | Completed | 2026-03-30 |
 | 3.1. Precision Usability Bugfixes | 4/4 | Complete    | 2026-03-30 |
+| 3.2. Homepage 3D Preview & Web Adaptation | 0/TBD | Not started | - |
 | 4. WeChat Mini-Program | 0/TBD | Not started | - |
