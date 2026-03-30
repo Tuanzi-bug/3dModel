@@ -91,6 +91,7 @@ describe('generateBom', () => {
   it('serializes grouped BOM data into procurement-friendly CSV text', () => {
     const csv = serializeBomCsv(generateBom(sceneGraph))
 
+    expect(csv.startsWith('\uFEFF')).toBe(true)
     expect(csv).toContain('类型,规格,数量,单位')
     expect(csv).toContain('杆,直径13mm × 长度1.20m,2,根')
     expect(csv).toContain('层板,1.00m × 0.50m × 0.02m · 木质,1,块')

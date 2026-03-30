@@ -35,6 +35,8 @@ const UNIT_LABELS: Record<BomLineItem['type'], string> = {
   teeConnector: '个',
 }
 
+const UTF8_BOM = '\uFEFF'
+
 function formatMeters(value: number) {
   return `${value.toFixed(2)}m`
 }
@@ -120,7 +122,7 @@ export function serializeBomCsv(items: BomLineItem[]): string {
     ...items.map((item) => [item.label, item.spec, item.quantity, item.unit]),
   ]
 
-  return rows
+  return `${UTF8_BOM}${rows
     .map((row) => row.map((cell) => escapeCsvCell(cell)).join(','))
-    .join('\n')
+    .join('\n')}`
 }
