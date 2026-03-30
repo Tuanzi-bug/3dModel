@@ -23,6 +23,7 @@ Users can quickly create, save, reopen, and refine modular shelf designs in a vi
 - ✓ User can duplicate components, use the viewport gizmo safely, and trust dashboard previews after the Phase 2.1 polish pass — Phase 2.1
 - ✓ User can snap components, inspect designs with preset views/dimensions, and export a BOM from the web editor — Phase 3
 - ✓ User can use repaired precision controls, stable viewport focus/zoom behavior, and Excel-safe BOM export after the Phase 3.1 bugfix pass — Phase 3.1
+- ✓ User sees a static, product-led homepage hero preview with clear copy, restrained parameter chips, and quieter supporting cards — Phase 3.3
 
 ### Active
 
@@ -67,6 +68,8 @@ Users can quickly create, save, reopen, and refine modular shelf designs in a vi
 | Improve preview fidelity by switching to an x-axis SVG side view and `object-contain` dashboard rendering | Users asked for previews that better resemble the built scene without replacing the deterministic preview pipeline | ✓ Good |
 | Keep BOM export as a thin header action backed by pure core CSV generation | Output should come from canonical scene data and stay reusable by future clients | ✓ Good |
 | Insert Phase 3.1 before Phase 4 when the new precision workflow regresses on feel, export compatibility, or camera usability | Tight usability fixes should land before cross-platform expansion inherits the wrong behavior | ✓ Good |
+| Keep the homepage hero preview isolated from editor state and ship it as a poster-first landing experience with browser-level regression coverage | Marketing-facing 3D should stay lightweight, degrade cleanly, and not pull homepage scope into full editor reuse or broader web adaptation | ✓ Good |
+| Reset the homepage hero around a static product preview instead of continuing live-3D polish | The interactive experiment felt overdesigned and less credible than a calmer product-page presentation | ✓ Good |
 
 ## Evolution
 
@@ -86,4 +89,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-30 after completing Phase 3.1 precision usability bugfixes*
+*Last updated: 2026-03-30 after completing Phase 3.3 homepage static hero polish*

@@ -26,7 +26,8 @@ Before GSD initialization, the codebase already implements the equivalent of a s
 - [x] **Phase 2.1: Freeform Stability & Preview Polish (INSERTED)** - Fix newly discovered freeform regressions and preview fidelity issues before precision work continues
 - [x] **Phase 3: Smart Snapping & Output** - Add precision assistance, advanced components, and BOM-oriented output
 - [x] **Phase 3.1: Precision Usability Bugfixes (INSERTED)** - Fix post-Phase-3 snapping feel, CSV export compatibility, and viewport focus/zoom regressions (completed 2026-03-30)
-- [ ] **Phase 3.2: Homepage 3D Preview & Web Adaptation (INSERTED)** - Complete the landing-page hero 3D preview before broader web adaptation and mini-program expansion
+- [x] **Phase 3.2: Homepage 3D Preview & Web Adaptation (INSERTED)** - Complete the landing-page hero 3D preview before broader web adaptation and mini-program expansion (completed 2026-03-30)
+- [ ] **Phase 3.3: Homepage Static Product Hero Polish (INSERTED)** - Reset the homepage hero around a static, product-led preview before any future live 3D revisit
 - [ ] **Phase 4: WeChat Mini-Program** - Reuse the shared core model in a mini-program client
 
 ## Phase Details
@@ -132,14 +133,31 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 03.2-01-PLAN.md — Establish the hero preview shell with poster-first loading and safe fallback behavior
-- [ ] 03.2-02-PLAN.md — Build the lightweight interactive 3D scene and camera behavior for the landing hero
-- [ ] 03.2-03-PLAN.md — Integrate the preview into the landing page with stable layout, hinting, and CTA-first hierarchy
-- [ ] 03.2-04-PLAN.md — Add homepage regression coverage for preview states and interactions
+- [x] 03.2-01-PLAN.md — Establish the hero preview shell with poster-first loading and safe fallback behavior
+- [x] 03.2-02-PLAN.md — Build the lightweight interactive 3D scene and camera behavior for the landing hero
+- [x] 03.2-03-PLAN.md — Integrate the preview into the landing page with stable layout, hinting, and CTA-first hierarchy
+- [x] 03.2-04-PLAN.md — Add homepage regression coverage for preview states and interactions
+
+### Phase 03.3: Homepage Static Product Hero Polish (INSERTED)
+**Goal**: Rework the homepage hero around a static, realistic, product-led preview so the landing page feels more credible before any future live 3D revisit.
+**Depends on**: Phase 3.2
+**Requirements**: [LAND-01, LAND-02, LAND-03, LAND-04]
+**UI hint**: yes
+**Success Criteria** (what must be TRUE):
+  1. The homepage hero shifts from animation/demo energy toward a believable product-page presentation centered on a static preview image.
+  2. The hero preview reads as a realistic product render or product-photo surface, not a toy-like or stylized 3D demo.
+  3. Title, supporting copy, CTA, and the static preview work as one coherent first-screen composition with a few restrained parameter labels.
+  4. The first section below the hero receives only minimal consistency cleanup; the phase does not expand into a full-homepage redesign.
+**Plans**: 3 plans
+
+Plans:
+- [x] 03.3-01-PLAN.md — Replace the live/default hero preview shell with a static product-led preview component and component tests
+- [x] 03.3-02-PLAN.md — Rework homepage copy/layout and lightly quiet the first section below the hero
+- [x] 03.3-03-PLAN.md — Replace the old interactive homepage browser regression with static hero coverage
 
 ### Phase 4: WeChat Mini-Program
 **Goal**: Extend the product to a WeChat mini-program while preserving shared core business logic across platforms.
-**Depends on**: Phase 3.2
+**Depends on**: Phase 3.3
 **Requirements**: [XPLT-01, XPLT-02, XPLT-03]
 **UI hint**: yes
 **Success Criteria** (what must be TRUE):
@@ -151,7 +169,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 2.1 → 3 → 3.1 → 3.2 → 4
+Phases execute in numeric order: 1 → 2 → 2.1 → 3 → 3.1 → 3.2 → 3.3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -160,5 +178,6 @@ Phases execute in numeric order: 1 → 2 → 2.1 → 3 → 3.1 → 3.2 → 4
 | 2.1. Freeform Stability & Preview Polish | 4/4 | Completed | 2026-03-30 |
 | 3. Smart Snapping & Output | 4/4 | Completed | 2026-03-30 |
 | 3.1. Precision Usability Bugfixes | 4/4 | Complete    | 2026-03-30 |
-| 3.2. Homepage 3D Preview & Web Adaptation | 0/4 | Planned | - |
+| 3.2. Homepage 3D Preview & Web Adaptation | 4/4 | Completed | 2026-03-30 |
+| 3.3. Homepage Static Product Hero Polish | 3/3 | Completed | 2026-03-30 |
 | 4. WeChat Mini-Program | 0/TBD | Not started | - |

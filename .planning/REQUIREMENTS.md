@@ -44,10 +44,17 @@ Requirements for the next execution roadmap, starting from the current brownfiel
 
 ### Homepage Preview
 
-- [ ] **HERO-01**: User sees a homepage hero preview that starts as a stable product-style poster and upgrades into a lightweight interactive 3D scene when the enhancement is ready
-- [ ] **HERO-02**: User can rotate and zoom the homepage preview on desktop and touch devices without exposing editor-style controls or camera panning
-- [ ] **HERO-03**: User gets a graceful fallback experience when 3D is unavailable, fails, or should suppress continuous motion, while the hero layout stays visually stable
-- [ ] **HERO-04**: User can understand and use the preview through device-appropriate interaction hints without the hero copy, CTA visibility, or first-load feel regressing noticeably
+- [x] **HERO-01**: User sees a homepage hero preview that starts as a stable product-style poster and upgrades into a lightweight interactive 3D scene when the enhancement is ready
+- [x] **HERO-02**: User can rotate and zoom the homepage preview on desktop and touch devices without exposing editor-style controls or camera panning
+- [x] **HERO-03**: User gets a graceful fallback experience when 3D is unavailable, fails, or should suppress continuous motion, while the hero layout stays visually stable
+- [x] **HERO-04**: User can understand and use the preview through device-appropriate interaction hints without the hero copy, CTA visibility, or first-load feel regressing noticeably
+
+### Homepage Static Hero Polish
+
+- [x] **LAND-01**: User sees a homepage hero centered on a static, product-led preview image instead of demo-like motion or interactive-3D emphasis
+- [x] **LAND-02**: User perceives the hero preview as a realistic product render/product-photo surface with restrained lighting, materials, background, and parameter chips
+- [x] **LAND-03**: User can immediately understand the homepage value proposition and primary actions because title, supporting copy, and CTA remain clear above the preview
+- [x] **LAND-04**: User sees the first section below the hero remain visually consistent with the new product-led direction without expanding into a full-homepage redesign
 
 ### Cross-Platform
 
@@ -94,19 +101,23 @@ Requirements for the next execution roadmap, starting from the current brownfiel
 | FIX-05 | Phase 3.1 | Completed |
 | FIX-06 | Phase 3.1 | Completed |
 | FIX-07 | Phase 3.1 | Completed |
-| HERO-01 | Phase 3.2 | Pending |
-| HERO-02 | Phase 3.2 | Pending |
-| HERO-03 | Phase 3.2 | Pending |
-| HERO-04 | Phase 3.2 | Pending |
+| HERO-01 | Phase 3.2 | Completed |
+| HERO-02 | Phase 3.2 | Completed |
+| HERO-03 | Phase 3.2 | Completed |
+| HERO-04 | Phase 3.2 | Completed |
+| LAND-01 | Phase 3.3 | Completed |
+| LAND-02 | Phase 3.3 | Completed |
+| LAND-03 | Phase 3.3 | Completed |
+| LAND-04 | Phase 3.3 | Completed |
 | XPLT-01 | Phase 4 | Pending |
 | XPLT-02 | Phase 4 | Pending |
 | XPLT-03 | Phase 4 | Pending |
 
 **Coverage:**
-- v1 requirements: 24 total
-- Mapped to phases: 24
+- v1 requirements: 28 total
+- Mapped to phases: 28
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-29*
-*Last updated: 2026-03-30 after planning Phase 3.2*
+*Last updated: 2026-03-30 after adding Phase 3.3 requirements*

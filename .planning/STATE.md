@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: Phase 03.2 planning complete
-last_updated: "2026-03-30T06:19:56Z"
-last_activity: 2026-03-30 -- Planned Phase 03.2 into poster-shell, hero-scene, landing integration, and regression coverage workstreams
+status: ready
+stopped_at: Phase 03.3 complete
+last_updated: "2026-03-30T11:42:38Z"
+last_activity: 2026-03-30 -- Completed Phase 03.3 static homepage hero polish and re-closed the landing page around a calmer product-led preview
 progress:
-  total_phases: 7
-  completed_phases: 5
-  total_plans: 23
-  completed_plans: 19
-  percent: 71
+  total_phases: 8
+  completed_phases: 7
+  total_plans: 26
+  completed_plans: 26
+  percent: 88
 ---
 
 # Project State
@@ -21,24 +21,24 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Users can quickly create, save, reopen, and refine modular shelf designs in a visual 3D workflow that feels reliable enough to keep using.
-**Current focus:** Phase 03.2 — homepage-3d-preview-and-web-adaptation
+**Current focus:** Phase 4 — WeChat Mini-Program
 
 ## Current Position
 
-Phase: 03.2
-Plan: 03.2-01 through 03.2-04 prepared
-Status: Phase 03.2 planning is complete; execution can now start on the homepage hero preview while broader web adaptation and Phase 4 remain deferred.
-Last activity: 2026-03-30 -- Planned Phase 03.2 into poster-shell, hero-scene, landing integration, and regression coverage workstreams
+Phase: 4 (WeChat Mini-Program) — NEXT UP
+Plan: Not started
+Status: Phase 03.3 is complete. The homepage now ships a static, product-led hero with quieter supporting content; mini-program expansion is the next roadmap step when ready.
+Last activity: 2026-03-30 -- Completed Phase 03.3 static homepage hero polish and re-closed the landing page around a calmer product-led preview
 
-Progress: ███████░░░ 71%
+Progress: █████████░ 88%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 19
+- Total plans completed: 23
 - Average duration: ~20 min
-- Total execution time: ~6.0 hours
+- Total execution time: ~7.0 hours
 
 **By Phase:**
 
@@ -48,11 +48,14 @@ Progress: ███████░░░ 71%
 | 02. Freeform Builder | 4 | 1.5 hours | ~22 min |
 | 02.1. Freeform Stability & Preview Polish | 4 | 0.8 hours | ~11 min |
 | 03. Smart Snapping & Output | 4 | 1.3 hours | ~20 min |
+| 03.1. Precision Usability Bugfixes | 4 | 1.1 hours | ~16 min |
+| 03.2. Homepage 3D Preview & Web Adaptation | 4 | 1.3 hours | ~20 min |
+| 03.3. Homepage Static Product Hero Polish | 3 | 0.5 hours | ~10 min |
 
 **Recent Trend:**
 
-- Last 5 plans: 03-04, 03.1-01, 03.1-02, 03.1-03, 03.1-04
-- Trend: Execution remains stable, and the inserted homepage-preview phase is now fully planned before the deferred mini-program phase
+- Last 5 plans: 03.2-03, 03.2-04, 03.3-01, 03.3-02, 03.3-03
+- Trend: Homepage work pivoted away from live-3D marketing energy toward a calmer static product presentation; the roadmap is now ready to resume the deferred mini-program scope.
 
 ## Accumulated Context
 
@@ -87,11 +90,19 @@ Recent decisions affecting current work:
 - [Exec] Phase 3.1 Plan 04 added browser regression coverage for repaired precision controls, camera state, and Excel-safe export bytes
 - [Brainstorm] Phase 3.2 will use a poster-first homepage preview with graceful fallback, reduced-motion handling, touch gestures, and a return-to-showcase camera recovery path
 - [Plan] Phase 3.2 is split into hero shell/fallback, isolated 3D scene behavior, landing-page integration, and homepage regression coverage
+- [Exec] Phase 3.2 Plan 01 introduced an isolated poster-first hero shell and locked its fallback/reduced-motion behavior with component tests
+- [Exec] Phase 3.2 Plan 02 added a dedicated landing-page R3F scene with rotate/zoom controls, WebGL gating, and return-to-showcase camera recovery
+- [Exec] Phase 3.2 Plan 03 replaced the homepage placeholder with the real preview and added device-aware hint copy plus landing-page hierarchy coverage
+- [Exec] Phase 3.2 Plan 04 added homepage Playwright coverage for desktop and touch behavior, plus hydration-safe runtime capability detection for the hero preview
+- [Discuss] Phase 03.3 will reset the homepage hero around a static, realistic, product-led preview and explicitly avoid overdesigned demo energy
+- [Exec] Phase 03.3 replaced the interactive homepage hero path with a static product-led preview, calmer copy hierarchy, and breakpoint-specific browser coverage
 
 ### Roadmap Evolution
 
 - Phase 03.2 inserted after Phase 03.1: Homepage 3D Preview and Web Adaptation (URGENT)
 - Phase 03.2 requirements are now formalized as HERO-01 through HERO-04 before execution begins
+- Phase 03.3 inserted after Phase 03.2: Homepage Static Product Hero Polish (URGENT)
+- Phase 03.3 completed: the homepage hero now ships as a static product-led preview before Phase 4 resumes
 
 ### Pending Todos
 
@@ -104,6 +115,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T06:19:56Z
-Stopped at: Phase 03.2 planning complete
-Resume file: .planning/phases/03.2-homepage-3d-preview-and-web-adaptation/03.2-01-PLAN.md
+Last session: 2026-03-30T11:42:38Z
+Stopped at: Phase 03.3 complete
+Resume file: .planning/ROADMAP.md
