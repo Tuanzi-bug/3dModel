@@ -17,6 +17,7 @@ import { useEditorStore } from '@/stores/editor-store'
 interface CameraPresetControllerProps {
   command: CameraCommand | null
   controlsRef: RefObject<any>
+  onCameraStateChange: (state: { position: [number, number, number]; target: [number, number, number] }) => void
 }
 
 type CameraCommand =
@@ -82,7 +83,18 @@ function zoomCamera(camera: any, controlsRef: RefObject<any>, direction: 'in' | 
   }
 }
 
-function CameraPresetController({ command, controlsRef }: CameraPresetControllerProps) {
+function readCameraState(camera: any, controlsRef: RefObject<any>) {
+  return {
+    position: [camera.position.x, camera.position.y, camera.position.z] as [number, number, number],
+    target: [
+      controlsRef.current?.target?.x ?? 0,
+      controlsRef.current?.target?.y ?? 0,
+      controlsRef.current?.target?.z ?? 0,
+    ] as [number, number, number],
+  }
+}
+
+function CameraPresetController({ command, controlsRef, onCameraStateChange }: CameraPresetControllerProps) {
   const { camera } = useThree()
 
   useEffect(() => {
@@ -92,13 +104,15 @@ function CameraPresetController({ command, controlsRef }: CameraPresetController
 
     if (command.type === 'frame' && command.bounds) {
       frameCamera(camera, controlsRef, command.bounds, command.preset)
+      onCameraStateChange(readCameraState(camera, controlsRef))
       return
     }
 
     if (command.type === 'zoom') {
       zoomCamera(camera, controlsRef, command.direction)
+      onCameraStateChange(readCameraState(camera, controlsRef))
     }
-  }, [camera, command, controlsRef])
+  }, [camera, command, controlsRef, onCameraStateChange])
 
   return null
 }
@@ -115,6 +129,10 @@ export function ViewportCanvas() {
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null)
   const [activePreset, setActivePreset] = useState<ViewPreset>('iso')
   const [cameraCommand, setCameraCommand] = useState<CameraCommand | null>(null)
+  const [cameraState, setCameraState] = useState({
+    position: [3, 3, 3] as [number, number, number],
+    target: [0, 0, 0] as [number, number, number],
+  })
   const transformDragRef = useRef<{
     position: [number, number, number]
     rotation: [number, number, number]
@@ -220,12 +238,19 @@ export function ViewportCanvas() {
         focusDisabled={!selectedBounds}
       />
       <DimensionOverlay bounds={bounds} />
+      <div data-testid="camera-state" className="sr-only">
+        {JSON.stringify(cameraState)}
+      </div>
 
       <Canvas
         camera={{ position: [3, 3, 3], fov: 50 }}
         onPointerMissed={() => selectNode(null)}
       >
-        <CameraPresetController command={cameraCommand} controlsRef={orbitControlsRef} />
+        <CameraPresetController
+          command={cameraCommand}
+          controlsRef={orbitControlsRef}
+          onCameraStateChange={setCameraState}
+        />
         <ambientLight intensity={0.4} />
         <directionalLight position={[10, 10, 5]} intensity={0.8} />
         <OrbitControls

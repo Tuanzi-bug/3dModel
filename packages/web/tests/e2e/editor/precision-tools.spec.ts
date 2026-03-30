@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
 import type { SceneNode } from '@3d-modeler/core'
 
@@ -13,10 +13,26 @@ type PersistedDesign = {
   updatedAt: string
 }
 
+type CameraState = {
+  position: [number, number, number]
+  target: [number, number, number]
+}
+
+async function readCameraState(page: Page): Promise<CameraState> {
+  const raw = await page.getByTestId('camera-state').textContent()
+
+  if (!raw) {
+    throw new Error('Camera state marker is empty')
+  }
+
+  return JSON.parse(raw) as CameraState
+}
+
 test.describe('Precision tools workflow', () => {
-  test('supports snapping, preset inspection controls, and BOM export together', async ({ page }) => {
+  test('supports repaired precision controls, viewport recovery, and excel-safe BOM export together', async ({ page }) => {
     const now = '2026-03-30T13:00:00.000Z'
     let persistedDesign: PersistedDesign | null = null
+    let lastPatchPayload: { name?: string; sceneGraph?: SceneNode; templateId?: string | null } | null = null
 
     await page.route('**/api/templates', async (route) => {
       await route.fulfill({
@@ -97,6 +113,7 @@ test.describe('Precision tools workflow', () => {
 
       if (request.method() === 'PATCH') {
         const payload = request.postDataJSON() as { name?: string; sceneGraph?: SceneNode; templateId?: string | null }
+        lastPatchPayload = payload
 
         persistedDesign = {
           ...persistedDesign,
@@ -126,8 +143,6 @@ test.describe('Precision tools workflow', () => {
 
     await page.getByRole('button', { name: '杆' }).click()
     await page.getByLabel('位置 X').fill('0.23')
-    await expect(page.getByLabel('位置 X')).toHaveValue('0.25')
-
     await page.getByRole('button', { name: '层板' }).click()
     await page.getByRole('button', { name: 'LED灯带' }).click()
     await page.getByRole('button', { name: '背板' }).click()
@@ -136,8 +151,42 @@ test.describe('Precision tools workflow', () => {
     await expect(page.getByRole('button', { name: '侧视' })).toBeVisible()
     await expect(page.getByRole('button', { name: '俯视' })).toBeVisible()
     await expect(page.getByRole('button', { name: '等轴' })).toBeVisible()
+    await expect(page.getByRole('button', { name: '聚焦选中' })).toBeVisible()
+    await expect(page.getByRole('button', { name: '放大' })).toBeVisible()
+    await expect(page.getByRole('button', { name: '缩小' })).toBeVisible()
+
     await page.getByRole('button', { name: '前视' }).click()
     await page.getByRole('button', { name: '等轴' }).click()
+
+    const beforeFocus = await readCameraState(page)
+    await page.getByRole('button', { name: '聚焦选中' }).click()
+    await expect.poll(async () => JSON.stringify((await readCameraState(page)).position)).not.toBe(JSON.stringify(beforeFocus.position))
+
+    const afterFocus = await readCameraState(page)
+    await page.getByRole('button', { name: '放大' }).click()
+    await expect.poll(async () => JSON.stringify((await readCameraState(page)).position)).not.toBe(JSON.stringify(afterFocus.position))
+
+    const afterZoomIn = await readCameraState(page)
+    await page.getByRole('button', { name: '缩小' }).click()
+    await expect.poll(async () => JSON.stringify((await readCameraState(page)).position)).not.toBe(JSON.stringify(afterZoomIn.position))
+
+    const beforeDeselect = await readCameraState(page)
+    const canvas = page.locator('canvas').first()
+    const canvasBox = await canvas.boundingBox()
+
+    if (!canvasBox) {
+      throw new Error('Canvas bounding box is unavailable')
+    }
+
+    await canvas.click({
+      position: {
+        x: canvasBox.width * 0.22,
+        y: canvasBox.height * 0.68,
+      },
+    })
+
+    await expect(page.locator('footer')).not.toContainText('已选择:')
+    await expect.poll(async () => JSON.stringify(await readCameraState(page))).toBe(JSON.stringify(beforeDeselect))
 
     await expect(page.getByText(/^宽 \d+\.\d{2}m$/)).toBeVisible()
     await expect(page.getByText(/^高 \d+\.\d{2}m$/)).toBeVisible()
@@ -152,11 +201,18 @@ test.describe('Precision tools workflow', () => {
     const downloadPath = await download.path()
     expect(downloadPath).not.toBeNull()
 
-    const csv = await readFile(downloadPath!, 'utf8')
+    const csvBytes = await readFile(downloadPath!)
+    expect([...csvBytes.subarray(0, 3)]).toEqual([0xef, 0xbb, 0xbf])
+
+    const csv = csvBytes.toString('utf8')
     expect(csv).toContain('类型,规格,数量,单位')
     expect(csv).toContain('杆')
     expect(csv).toContain('层板')
     expect(csv).toContain('LED灯带')
     expect(csv).toContain('背板')
+
+    await page.getByRole('button', { name: '保存设计' }).click()
+    await expect(page.getByRole('button', { name: '已保存' })).toBeVisible()
+    expect(lastPatchPayload?.sceneGraph?.children.some((child) => child.position[0] === 0.25)).toBe(true)
   })
 })
