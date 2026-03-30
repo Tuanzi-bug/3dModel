@@ -17,5 +17,13 @@ data/
 coverage
 *.lcov
 
+# TypeScript incremental build artifacts
+*.tsbuildinfo
+
+# Playwright / E2E generated output
+packages/web/playwright-report/
+packages/web/test-results/
+packages/web/tests/e2e/screenshots/
+
 # Superpowers brainstorm cache
 .superpowers
