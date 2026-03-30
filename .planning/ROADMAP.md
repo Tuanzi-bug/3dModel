@@ -122,16 +122,20 @@ Plans:
 ### Phase 3.2: Homepage 3D Preview & Web Adaptation (INSERTED)
 **Goal**: Complete the landing-page hero 3D preview with a lightweight interactive scene before broader web adaptation and mini-program work begin.
 **Depends on**: Phase 3.1
-**Requirements**: TBD
+**Requirements**: [HERO-01, HERO-02, HERO-03, HERO-04]
 **UI hint**: yes
 **Success Criteria** (what must be TRUE):
-  1. The homepage hero replaces the static 3D placeholder with a lightweight interactive preview.
-  2. The preview supports slow auto-rotation plus user-controlled rotate/zoom interaction on desktop and mobile without introducing full editor-style controls.
-  3. Broader web adaptation and Phase 4 mini-program work stay deferred instead of expanding this inserted phase.
-**Plans**: TBD
+  1. The homepage hero replaces the static placeholder with a poster-first preview that upgrades into a lightweight interactive 3D scene while keeping the title, supporting copy, and CTA immediately usable.
+  2. The preview supports slow auto-rotation plus user-controlled rotate/zoom interaction on desktop and touch devices, pauses during active interaction, and returns to a stable default showcase angle before resuming motion, without introducing pan or editor-style controls.
+  3. Unsupported, failed, reduced-motion, or otherwise unsafe 3D states fall back cleanly to a stable poster presentation with device-appropriate interaction hinting and no broken or blank hero block.
+  4. Broader web adaptation and Phase 4 mini-program work stay deferred instead of expanding this inserted phase.
+**Plans**: 4 plans
 
 Plans:
-- [ ] TBD (run `$gsd-plan-phase 03.2` to break down)
+- [ ] 03.2-01-PLAN.md — Establish the hero preview shell with poster-first loading and safe fallback behavior
+- [ ] 03.2-02-PLAN.md — Build the lightweight interactive 3D scene and camera behavior for the landing hero
+- [ ] 03.2-03-PLAN.md — Integrate the preview into the landing page with stable layout, hinting, and CTA-first hierarchy
+- [ ] 03.2-04-PLAN.md — Add homepage regression coverage for preview states and interactions
 
 ### Phase 4: WeChat Mini-Program
 **Goal**: Extend the product to a WeChat mini-program while preserving shared core business logic across platforms.
@@ -156,5 +160,5 @@ Phases execute in numeric order: 1 → 2 → 2.1 → 3 → 3.1 → 3.2 → 4
 | 2.1. Freeform Stability & Preview Polish | 4/4 | Completed | 2026-03-30 |
 | 3. Smart Snapping & Output | 4/4 | Completed | 2026-03-30 |
 | 3.1. Precision Usability Bugfixes | 4/4 | Complete    | 2026-03-30 |
-| 3.2. Homepage 3D Preview & Web Adaptation | 0/TBD | Not started | - |
+| 3.2. Homepage 3D Preview & Web Adaptation | 0/4 | Planned | - |
 | 4. WeChat Mini-Program | 0/TBD | Not started | - |

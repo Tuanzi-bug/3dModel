@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 03.1 completed
-last_updated: "2026-03-30T03:16:14.658Z"
-last_activity: 2026-03-30
+stopped_at: Phase 03.2 planning complete
+last_updated: "2026-03-30T06:19:56Z"
+last_activity: 2026-03-30 -- Planned Phase 03.2 into poster-shell, hero-scene, landing integration, and regression coverage workstreams
 progress:
-  total_phases: 6
+  total_phases: 7
   completed_phases: 5
-  total_plans: 19
+  total_plans: 23
   completed_plans: 19
-  percent: 67
+  percent: 71
 ---
 
 # Project State
@@ -21,24 +21,24 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Users can quickly create, save, reopen, and refine modular shelf designs in a visual 3D workflow that feels reliable enough to keep using.
-**Current focus:** Phase 04 — wechat-mini-program
+**Current focus:** Phase 03.2 — homepage-3d-preview-and-web-adaptation
 
 ## Current Position
 
-Phase: 4
-Plan: Not started
-Status: Phase 03.1 completed; ready to plan Phase 04
-Last activity: 2026-03-30
+Phase: 03.2
+Plan: 03.2-01 through 03.2-04 prepared
+Status: Phase 03.2 planning is complete; execution can now start on the homepage hero preview while broader web adaptation and Phase 4 remain deferred.
+Last activity: 2026-03-30 -- Planned Phase 03.2 into poster-shell, hero-scene, landing integration, and regression coverage workstreams
 
-Progress: ███████░░░ 67%
+Progress: ███████░░░ 71%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 15
+- Total plans completed: 19
 - Average duration: ~20 min
-- Total execution time: 5.0 hours
+- Total execution time: ~6.0 hours
 
 **By Phase:**
 
@@ -51,8 +51,8 @@ Progress: ███████░░░ 67%
 
 **Recent Trend:**
 
-- Last 5 plans: 02.1-04, 03-01, 03-02, 03-03, 03-04
-- Trend: Execution is stable, but a small inserted bugfix phase is now queued to refine post-Phase-3 usability before Phase 4
+- Last 5 plans: 03-04, 03.1-01, 03.1-02, 03.1-03, 03.1-04
+- Trend: Execution remains stable, and the inserted homepage-preview phase is now fully planned before the deferred mini-program phase
 
 ## Accumulated Context
 
@@ -85,6 +85,13 @@ Recent decisions affecting current work:
 - [Exec] Phase 3.1 Plan 02 made BOM CSV exports Excel-safe with a UTF-8 BOM while keeping the plain CSV contract
 - [Exec] Phase 3.1 Plan 03 made deselection camera-safe and added explicit viewport focus/zoom controls
 - [Exec] Phase 3.1 Plan 04 added browser regression coverage for repaired precision controls, camera state, and Excel-safe export bytes
+- [Brainstorm] Phase 3.2 will use a poster-first homepage preview with graceful fallback, reduced-motion handling, touch gestures, and a return-to-showcase camera recovery path
+- [Plan] Phase 3.2 is split into hero shell/fallback, isolated 3D scene behavior, landing-page integration, and homepage regression coverage
+
+### Roadmap Evolution
+
+- Phase 03.2 inserted after Phase 03.1: Homepage 3D Preview and Web Adaptation (URGENT)
+- Phase 03.2 requirements are now formalized as HERO-01 through HERO-04 before execution begins
 
 ### Pending Todos
 
@@ -97,6 +104,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T20:56:00+08:00
-Stopped at: Phase 03.1 completed
-Resume file: .planning/ROADMAP.md
+Last session: 2026-03-30T06:19:56Z
+Stopped at: Phase 03.2 planning complete
+Resume file: .planning/phases/03.2-homepage-3d-preview-and-web-adaptation/03.2-01-PLAN.md

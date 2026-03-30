@@ -42,6 +42,13 @@ Requirements for the next execution roadmap, starting from the current brownfiel
 - [x] **FIX-06**: User can open the exported BOM CSV in Excel without Chinese text becoming garbled
 - [x] **FIX-07**: User can deselect without camera jumps and can explicitly focus the selected component plus zoom in/out from the viewport controls
 
+### Homepage Preview
+
+- [ ] **HERO-01**: User sees a homepage hero preview that starts as a stable product-style poster and upgrades into a lightweight interactive 3D scene when the enhancement is ready
+- [ ] **HERO-02**: User can rotate and zoom the homepage preview on desktop and touch devices without exposing editor-style controls or camera panning
+- [ ] **HERO-03**: User gets a graceful fallback experience when 3D is unavailable, fails, or should suppress continuous motion, while the hero layout stays visually stable
+- [ ] **HERO-04**: User can understand and use the preview through device-appropriate interaction hints without the hero copy, CTA visibility, or first-load feel regressing noticeably
+
 ### Cross-Platform
 
 - [ ] **XPLT-01**: User can authenticate into a WeChat mini-program client using the project auth model
@@ -87,15 +94,19 @@ Requirements for the next execution roadmap, starting from the current brownfiel
 | FIX-05 | Phase 3.1 | Completed |
 | FIX-06 | Phase 3.1 | Completed |
 | FIX-07 | Phase 3.1 | Completed |
+| HERO-01 | Phase 3.2 | Pending |
+| HERO-02 | Phase 3.2 | Pending |
+| HERO-03 | Phase 3.2 | Pending |
+| HERO-04 | Phase 3.2 | Pending |
 | XPLT-01 | Phase 4 | Pending |
 | XPLT-02 | Phase 4 | Pending |
 | XPLT-03 | Phase 4 | Pending |
 
 **Coverage:**
-- v1 requirements: 20 total
-- Mapped to phases: 20
+- v1 requirements: 24 total
+- Mapped to phases: 24
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-29*
-*Last updated: 2026-03-30 after completing Phase 3.1*
+*Last updated: 2026-03-30 after planning Phase 3.2*
