@@ -15,41 +15,90 @@ import { DimensionOverlay } from './DimensionOverlay'
 import { useEditorStore } from '@/stores/editor-store'
 
 interface CameraPresetControllerProps {
-  activePreset: ViewPreset
-  bounds: ReturnType<typeof getSceneBounds>
+  command: CameraCommand | null
   controlsRef: RefObject<any>
 }
 
-function CameraPresetController({ activePreset, bounds, controlsRef }: CameraPresetControllerProps) {
+type CameraCommand =
+  | {
+      type: 'frame'
+      bounds: ReturnType<typeof getSceneBounds>
+      preset: ViewPreset
+      token: number
+    }
+  | {
+      type: 'zoom'
+      direction: 'in' | 'out'
+      token: number
+    }
+
+function frameCamera(
+  camera: any,
+  controlsRef: RefObject<any>,
+  bounds: NonNullable<ReturnType<typeof getSceneBounds>>,
+  preset: ViewPreset,
+) {
+  const [width, height, depth] = bounds.size
+  const [cx, cy, cz] = bounds.center
+  const maxSpan = Math.max(width, height, depth, 0.5)
+  const distance = Math.max(maxSpan * 2.4, 2)
+  const target = new Vector3(cx, cy, cz)
+
+  const presetPosition: Record<ViewPreset, [number, number, number]> = {
+    front: [cx, cy + height * 0.15, cz + distance],
+    side: [cx + distance, cy + height * 0.15, cz],
+    top: [cx, cy + distance, cz + 0.001],
+    iso: [cx + distance * 0.72, cy + distance * 0.6, cz + distance * 0.72],
+  }
+
+  camera.position.set(...presetPosition[preset])
+  camera.lookAt(target)
+  camera.updateProjectionMatrix()
+
+  if (controlsRef.current) {
+    controlsRef.current.target.copy(target)
+    controlsRef.current.update()
+  }
+}
+
+function zoomCamera(camera: any, controlsRef: RefObject<any>, direction: 'in' | 'out') {
+  const target = controlsRef.current?.target
+  const tx = target?.x ?? 0
+  const ty = target?.y ?? 0
+  const tz = target?.z ?? 0
+  const scale = direction === 'in' ? 0.82 : 1.18
+  const nextPosition: [number, number, number] = [
+    tx + (camera.position.x - tx) * scale,
+    ty + (camera.position.y - ty) * scale,
+    tz + (camera.position.z - tz) * scale,
+  ]
+
+  camera.position.set(...nextPosition)
+  camera.lookAt(new Vector3(tx, ty, tz))
+  camera.updateProjectionMatrix()
+
+  if (controlsRef.current) {
+    controlsRef.current.update()
+  }
+}
+
+function CameraPresetController({ command, controlsRef }: CameraPresetControllerProps) {
   const { camera } = useThree()
 
   useEffect(() => {
-    if (!bounds) {
+    if (!command) {
       return
     }
 
-    const [width, height, depth] = bounds.size
-    const [cx, cy, cz] = bounds.center
-    const maxSpan = Math.max(width, height, depth, 0.5)
-    const distance = Math.max(maxSpan * 2.4, 2)
-    const target = new Vector3(cx, cy, cz)
-
-    const presetPosition: Record<ViewPreset, [number, number, number]> = {
-      front: [cx, cy + height * 0.15, cz + distance],
-      side: [cx + distance, cy + height * 0.15, cz],
-      top: [cx, cy + distance, cz + 0.001],
-      iso: [cx + distance * 0.72, cy + distance * 0.6, cz + distance * 0.72],
+    if (command.type === 'frame' && command.bounds) {
+      frameCamera(camera, controlsRef, command.bounds, command.preset)
+      return
     }
 
-    camera.position.set(...presetPosition[activePreset])
-    camera.lookAt(target)
-    camera.updateProjectionMatrix()
-
-    if (controlsRef.current) {
-      controlsRef.current.target.copy(target)
-      controlsRef.current.update()
+    if (command.type === 'zoom') {
+      zoomCamera(camera, controlsRef, command.direction)
     }
-  }, [activePreset, bounds, camera, controlsRef])
+  }, [camera, command, controlsRef])
 
   return null
 }
@@ -65,11 +114,14 @@ export function ViewportCanvas() {
   const orbitControlsRef = useRef<any>(null)
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null)
   const [activePreset, setActivePreset] = useState<ViewPreset>('iso')
+  const [cameraCommand, setCameraCommand] = useState<CameraCommand | null>(null)
   const transformDragRef = useRef<{
     position: [number, number, number]
     rotation: [number, number, number]
   } | null>(null)
-  const bounds = getSceneBounds(sceneGraph, selectedNodeId) ?? getSceneBounds(sceneGraph)
+  const sceneBounds = getSceneBounds(sceneGraph)
+  const selectedBounds = selectedNodeId ? getSceneBounds(sceneGraph, selectedNodeId) : null
+  const bounds = selectedBounds ?? sceneBounds
 
   const handleSelectGroup = useCallback((group: Group | null, nodeId: string) => {
     if (nodeId === selectedNodeId) {
@@ -82,6 +134,53 @@ export function ViewportCanvas() {
       setSelectedGroup(null)
     }
   }, [selectedNodeId])
+
+  useEffect(() => {
+    if (!cameraCommand && sceneBounds) {
+      setCameraCommand({
+        type: 'frame',
+        bounds: sceneBounds,
+        preset: activePreset,
+        token: Date.now(),
+      })
+    }
+  }, [activePreset, cameraCommand, sceneBounds])
+
+  const handlePresetChange = useCallback((preset: ViewPreset) => {
+    setActivePreset(preset)
+
+    if (!sceneBounds) {
+      return
+    }
+
+    setCameraCommand({
+      type: 'frame',
+      bounds: selectedBounds ?? sceneBounds,
+      preset,
+      token: Date.now(),
+    })
+  }, [sceneBounds, selectedBounds])
+
+  const handleFocusSelected = useCallback(() => {
+    if (!selectedBounds) {
+      return
+    }
+
+    setCameraCommand({
+      type: 'frame',
+      bounds: selectedBounds,
+      preset: activePreset,
+      token: Date.now(),
+    })
+  }, [activePreset, selectedBounds])
+
+  const handleZoom = useCallback((direction: 'in' | 'out') => {
+    setCameraCommand({
+      type: 'zoom',
+      direction,
+      token: Date.now(),
+    })
+  }, [])
 
   return (
     <div className="relative h-full w-full">
@@ -112,14 +211,21 @@ export function ViewportCanvas() {
         </button>
       </div>
 
-      <ViewPresetToolbar activePreset={activePreset} onChange={setActivePreset} />
+      <ViewPresetToolbar
+        activePreset={activePreset}
+        onChange={handlePresetChange}
+        onFocusSelected={handleFocusSelected}
+        onZoomIn={() => handleZoom('in')}
+        onZoomOut={() => handleZoom('out')}
+        focusDisabled={!selectedBounds}
+      />
       <DimensionOverlay bounds={bounds} />
 
       <Canvas
         camera={{ position: [3, 3, 3], fov: 50 }}
         onPointerMissed={() => selectNode(null)}
       >
-        <CameraPresetController activePreset={activePreset} bounds={bounds} controlsRef={orbitControlsRef} />
+        <CameraPresetController command={cameraCommand} controlsRef={orbitControlsRef} />
         <ambientLight intensity={0.4} />
         <directionalLight position={[10, 10, 5]} intensity={0.8} />
         <OrbitControls

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import React, { useEffect } from 'react'
 import type { SceneNode } from '@3d-modeler/core'
 
@@ -20,13 +20,31 @@ const mocks = vi.hoisted(() => {
 
   return {
     camera: {
-      position: { set: vi.fn() },
+      position: {
+        x: 3,
+        y: 3,
+        z: 3,
+        set: vi.fn((x: number, y: number, z: number) => {
+          mocks.camera.position.x = x
+          mocks.camera.position.y = y
+          mocks.camera.position.z = z
+        }),
+      },
       lookAt: vi.fn(),
       updateProjectionMatrix: vi.fn(),
     },
     orbitControls: {
       enabled: true,
-      target: { copy: vi.fn() },
+      target: {
+        x: 0,
+        y: 0,
+        z: 0,
+        copy: vi.fn((vector: { x: number; y: number; z: number }) => {
+          mocks.orbitControls.target.x = vector.x
+          mocks.orbitControls.target.y = vector.y
+          mocks.orbitControls.target.z = vector.z
+        }),
+      },
       update: vi.fn(),
     },
     position,
@@ -190,6 +208,7 @@ describe('ViewportCanvas', () => {
 
   afterEach(() => {
     consoleErrorSpy.mockRestore()
+    cleanup()
   })
 
   it('defers snap resolution for translate mode until the drag ends', () => {
@@ -211,5 +230,20 @@ describe('ViewportCanvas', () => {
       position: [0.25, 1, 0],
       rotation: [0, 0, 0],
     })
+  })
+
+  it('clears selection without reframing the camera and exposes explicit focus controls', () => {
+    render(<ViewportCanvas />)
+
+    mocks.camera.position.set.mockClear()
+
+    fireEvent.click(screen.getByTestId('canvas'))
+
+    expect(mocks.selectNode).toHaveBeenCalledWith(null)
+    expect(mocks.camera.position.set).not.toHaveBeenCalled()
+
+    fireEvent.click(screen.getByRole('button', { name: '聚焦选中' }))
+
+    expect(mocks.camera.position.set).toHaveBeenCalled()
   })
 })

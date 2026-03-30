@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-stopped_at: Phase 03.1 plan 02 completed
-last_updated: "2026-03-30T20:46:00+08:00"
-last_activity: 2026-03-30 -- Completed Phase 03.1 Plan 02 for Excel-safe BOM CSV export
+stopped_at: Phase 03.1 plan 03 completed
+last_updated: "2026-03-30T20:48:00+08:00"
+last_activity: 2026-03-30 -- Completed Phase 03.1 Plan 03 for viewport focus and deselection stability
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 4
-  completed_plans: 2
-  percent: 75
+  completed_plans: 3
+  percent: 79
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 ## Current Position
 
 Phase: 03.1 (precision-usability-bugfixes) — IN PROGRESS
-Plan: 2 of 4
-Status: Phase 03.1 execution in progress after completing export compatibility fixes
-Last activity: 2026-03-30 -- Completed Phase 03.1 Plan 02 for Excel-safe BOM CSV export
+Plan: 3 of 4
+Status: Phase 03.1 execution in progress after completing viewport camera-control fixes
+Last activity: 2026-03-30 -- Completed Phase 03.1 Plan 03 for viewport focus and deselection stability
 
 Progress: ███████░░░ 67%
 
@@ -83,6 +83,7 @@ Recent decisions affecting current work:
 - [Plan] Phase 3.1 is split into snap-release movement, Excel-safe BOM export, viewport camera recovery controls, and final browser regression coverage
 - [Exec] Phase 3.1 Plan 01 moved translate snapping to drag release and added viewport timing regression coverage
 - [Exec] Phase 3.1 Plan 02 made BOM CSV exports Excel-safe with a UTF-8 BOM while keeping the plain CSV contract
+- [Exec] Phase 3.1 Plan 03 made deselection camera-safe and added explicit viewport focus/zoom controls
 
 ### Pending Todos
 
@@ -95,6 +96,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T20:46:00+08:00
-Stopped at: Phase 03.1 plan 02 completed
-Resume file: .planning/phases/03.1-precision-usability-bugfixes/03.1-03-PLAN.md
+Last session: 2026-03-30T20:48:00+08:00
+Stopped at: Phase 03.1 plan 03 completed
+Resume file: .planning/phases/03.1-precision-usability-bugfixes/03.1-04-PLAN.md
