@@ -17,12 +17,14 @@ Users can quickly create, save, reopen, and refine modular shelf designs in a vi
 - ✓ User can save, list, reopen, and delete their own designs — existing
 - ✓ User can orbit, zoom, and pan the 3D scene while editing — existing
 - ✓ User can use undo/redo and autosave during the current template-based editing flow — existing
+- ✓ User can reopen saved designs without scene/state drift across the current template flow — Phase 1
+- ✓ User can start from an empty canvas and freeform-edit supported shelf components — Phase 2
+- ✓ User can distinguish preset entries and saved designs through generated preview imagery — Phase 2
+- ✓ User can duplicate components, use the viewport gizmo safely, and trust dashboard previews after the Phase 2.1 polish pass — Phase 2.1
+- ✓ User can snap components, inspect designs with preset views/dimensions, and export a BOM from the web editor — Phase 3
 
 ### Active
 
-- [ ] Stabilize the current editor core flow and reduce template-specific coupling so saved/reopened editing flows stay consistent before adding major new scope
-- [ ] Add full freeform building mode for composing designs without starting from a template
-- [ ] Add snapping, advanced components, dimension aids, preset views, and BOM export
 - [ ] Reuse the shared core logic in a WeChat mini-program client
 
 ### Out of Scope
@@ -57,6 +59,12 @@ Users can quickly create, save, reopen, and refine modular shelf designs in a vi
 | Treat the current codebase as a brownfield MVP baseline, not a greenfield project | Existing functionality is substantial enough that GSD should organize around current reality instead of re-planning from zero | ✓ Good |
 | Start the first GSD execution phase with MVP hardening before freeform expansion | The current editor already works, but unresolved consistency/quality issues would make Phase 2 riskier if left alone | ✓ Good |
 | Treat templates as preset scene entry points during Phase 1, not as a first-class editing system | The core product priority is dependable custom editing, not template parameter fidelity | ✓ Good |
+| Insert an urgent Phase 2.1 before Phase 3 when newly shipped freeform features regress or crash | Blocking regressions should be fixed before the precision/output roadmap expands the editor surface further | ✓ Good |
+| Keep Phase 3 precision logic in shared core utilities instead of burying it inside the web canvas | Snapping, bounds, and BOM rules should be testable and reusable by later clients, including the mini-program | ✓ Good |
+| Keep duplicate IDs on the same typed `type-sequence` scheme as direct component insertion | Property editing, counters, and future snapping rules all depend on predictable node identity after copy | ✓ Good |
+| Show unsupported palette entries as disabled instead of clickable | False affordances were creating broken interactions and obscuring the true supported surface | ✓ Good |
+| Improve preview fidelity by switching to an x-axis SVG side view and `object-contain` dashboard rendering | Users asked for previews that better resemble the built scene without replacing the deterministic preview pipeline | ✓ Good |
+| Keep BOM export as a thin header action backed by pure core CSV generation | Output should come from canonical scene data and stay reusable by future clients | ✓ Good |
 
 ## Evolution
 
@@ -76,4 +84,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-29 after initialization*
+*Last updated: 2026-03-30 after completing Phase 3*

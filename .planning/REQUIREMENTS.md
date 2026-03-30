@@ -9,24 +9,32 @@ Requirements for the next execution roadmap, starting from the current brownfiel
 
 ### Reliability
 
-- [ ] **RELI-01**: User can reopen a saved design and continue editing the persisted scene graph and component properties without hidden resets or template-driven drift
-- [ ] **RELI-02**: User can use the current core flow (dashboard entry → edit → save/autosave → reopen) without data-consistency regressions across save/load/edit paths
-- [ ] **RELI-03**: User can trust that the current editor MVP remains stable while new phases are added on top of it, backed by automated regression coverage for the core flow
+- [x] **RELI-01**: User can reopen a saved design and continue editing the persisted scene graph and component properties without hidden resets or template-driven drift
+- [x] **RELI-02**: User can use the current core flow (dashboard entry → edit → save/autosave → reopen) without data-consistency regressions across save/load/edit paths
+- [x] **RELI-03**: User can trust that the current editor MVP remains stable while new phases are added on top of it, backed by automated regression coverage for the core flow
 
 ### Freeform Builder
 
-- [ ] **FREE-01**: User can start a design from an empty canvas without choosing a template
-- [ ] **FREE-02**: User can add supported components from the library into the 3D scene
-- [ ] **FREE-03**: User can move, rotate, duplicate, and delete components in freeform mode
-- [ ] **FREE-04**: User can switch from template mode to freeform mode while keeping the current scene graph
-- [ ] **FREE-05**: User can use keyboard shortcuts for the core freeform editing actions
+- [x] **FREE-01**: User can start a design from an empty canvas without choosing a template
+- [x] **FREE-02**: User can add supported components from the library into the 3D scene
+- [x] **FREE-03**: User can move, rotate, duplicate, and delete components in freeform mode
+- [x] **FREE-04**: User can switch from template mode to freeform mode while keeping the current scene graph
+- [x] **FREE-05**: User can use keyboard shortcuts for the core freeform editing actions
+- [x] **PREV-01**: User can visually distinguish preset entries and saved designs on the dashboard through preview images
+
+### Stability & Polish
+
+- [x] **FIX-01**: User can duplicate a component and immediately edit the duplicated component without the properties panel falling into an empty or invalid state
+- [x] **FIX-02**: User only sees interactive component-library entries for currently supported components; unsupported entries remain disabled until implemented
+- [x] **FIX-03**: User can click the viewport coordinate-axis gizmo without triggering runtime errors or destabilizing camera controls
+- [x] **FIX-04**: User sees dashboard preview images rendered from a stable x-axis-oriented view that better matches the actual shelf structure
 
 ### Precision & Output
 
-- [ ] **SNAP-01**: User can snap components to grid positions or compatible connection points during placement and movement
-- [ ] **SNAP-02**: User can add LED strip and back panel components to a design
-- [ ] **SNAP-03**: User can view preset camera angles and dimension aids while editing
-- [ ] **OUT-01**: User can export a BOM / parts list for the current design
+- [x] **SNAP-01**: User can snap components to grid positions or compatible connection points during placement and movement
+- [x] **SNAP-02**: User can add LED strip and back panel components to a design
+- [x] **SNAP-03**: User can view preset camera angles and dimension aids while editing
+- [x] **OUT-01**: User can export a BOM / parts list for the current design
 
 ### Cross-Platform
 
@@ -53,27 +61,32 @@ Requirements for the next execution roadmap, starting from the current brownfiel
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| RELI-01 | Phase 1 | Pending |
-| RELI-02 | Phase 1 | Pending |
-| RELI-03 | Phase 1 | Pending |
-| FREE-01 | Phase 2 | Pending |
-| FREE-02 | Phase 2 | Pending |
-| FREE-03 | Phase 2 | Pending |
-| FREE-04 | Phase 2 | Pending |
-| FREE-05 | Phase 2 | Pending |
-| SNAP-01 | Phase 3 | Pending |
-| SNAP-02 | Phase 3 | Pending |
-| SNAP-03 | Phase 3 | Pending |
-| OUT-01 | Phase 3 | Pending |
+| RELI-01 | Phase 1 | Completed |
+| RELI-02 | Phase 1 | Completed |
+| RELI-03 | Phase 1 | Completed |
+| FREE-01 | Phase 2 | Completed |
+| FREE-02 | Phase 2 | Completed |
+| FREE-03 | Phase 2 | Completed |
+| FREE-04 | Phase 2 | Completed |
+| FREE-05 | Phase 2 | Completed |
+| PREV-01 | Phase 2 | Completed |
+| FIX-01 | Phase 2.1 | Completed |
+| FIX-02 | Phase 2.1 | Completed |
+| FIX-03 | Phase 2.1 | Completed |
+| FIX-04 | Phase 2.1 | Completed |
+| SNAP-01 | Phase 3 | Completed |
+| SNAP-02 | Phase 3 | Completed |
+| SNAP-03 | Phase 3 | Completed |
+| OUT-01 | Phase 3 | Completed |
 | XPLT-01 | Phase 4 | Pending |
 | XPLT-02 | Phase 4 | Pending |
 | XPLT-03 | Phase 4 | Pending |
 
 **Coverage:**
-- v1 requirements: 15 total
-- Mapped to phases: 15
+- v1 requirements: 20 total
+- Mapped to phases: 20
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-29*
-*Last updated: 2026-03-29 after project initialization*
+*Last updated: 2026-03-30 after completing Phase 3*

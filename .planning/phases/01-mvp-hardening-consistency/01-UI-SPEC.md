@@ -26,8 +26,9 @@ reviewed_at: 2026-03-29T13:58:47Z
 
 ### Source Baseline
 
-- Use the existing Tailwind extension in `packages/web/tailwind.config.ts` as the canonical token source.
-- Preserve the existing Chinese product voice from `docs/design-system.md`.
+- Use `docs/design-system.md` as the product baseline for palette intent, typography hierarchy, interaction patterns, and Chinese product voice.
+- Use `packages/web/tailwind.config.ts` as the current implementation entry for named shared tokens such as `primary`, `accent`, and `accent-hover`.
+- Until the Tailwind token surface is expanded, neutral backgrounds, borders, and text may continue to use the existing slate utility scale that matches `docs/design-system.md`.
 - Do not introduce a new component system or shadcn migration in Phase 1.
 
 ---
@@ -54,17 +55,21 @@ Exceptions: none
 
 | Role | Size | Weight | Line Height |
 |------|------|--------|-------------|
+| Meta / Small | 12px | 400-500 | 1.4 |
 | Body | 14px | 400 | 1.5 |
-| Label | 12px | 600 | 1.4 |
-| Heading | 18px | 600 | 1.4 |
-| Display | 36px | 600 | 1.2 |
+| Button / Control | 14px | 500 | 1 |
+| Label / Heading | 18px | 600 | 1.4 |
+| Section Heading | 24px | 600 | 1.3 |
+| Display | 36px | 700 | 1.2 |
 
 ### Type Rules
 
-- Use only these four sizes in Phase 1 surfaces.
-- Use only weights `400` and `600`.
-- Editor chrome, property labels, status text, and metadata should stay in Body or Label sizes.
-- The dashboard page title may use Display size; section titles should use Heading size.
+- Phase 1 should stay within the established design-system hierarchy: 12px, 14px, 18px, 24px, and 36px only.
+- Allowed weights are `400`, `500`, `600`, and `700`.
+- Editor chrome, property labels, status text, timestamps, and metadata should stay in 12px or 14px styles.
+- Buttons and compact controls may use 14px / 500.
+- Section titles should use 18px or 24px depending on hierarchy.
+- `700` is reserved for page-level titles such as the dashboard heading.
 
 ---
 
@@ -130,6 +135,32 @@ Accent reserved for: `保存设计` primary action, focused form fields, the act
 
 ---
 
+## Responsive Contract
+
+Target checkpoints: `375px`, `768px`, `1024px`, `1440px`
+
+### Dashboard
+
+- At `375px`, use a single-column saved-design list and a 1- to 2-column preset-entry grid with no horizontal scrolling.
+- At `768px`, saved designs may expand to 2 columns; preset-entry cards may expand to 2 to 3 columns.
+- At `1024px` and above, the current multi-column dashboard layout is acceptable as long as the preset-entry section remains visually first.
+- At `1440px`, widen spacing rather than over-emphasizing cards; page title and create-entry section should still dominate visual hierarchy.
+
+### Editor
+
+- At `375px`, the viewport remains the primary surface; side panels must collapse into stacked sections, drawers, or another non-overlapping pattern.
+- At `768px`, keep the viewport dominant and allow at most one persistent side panel at a time.
+- At `1024px`, the standard header + left panel + viewport + right panel layout is allowed if the viewport remains visually dominant.
+- At `1440px`, increase breathing room without turning panels into oversized visual blocks.
+
+### Responsive Rules
+
+- No breakpoint may introduce horizontal page scroll for primary editor or dashboard surfaces.
+- Fixed or sticky bars must not cover actionable content.
+- Save, undo, redo, and return actions must remain reachable without relying on hover-only behavior.
+
+---
+
 ## Phase-Specific UI Contract
 
 ### Template Repositioning
@@ -164,7 +195,12 @@ Accent reserved for: `保存设计` primary action, focused form fields, the act
 ## Accessibility Contract
 
 - Icon-only affordances must keep text or `aria-label` fallback.
-- Focus states use the accent color only on the active field or primary action.
+- Prefer semantic interactive elements first: `button`, `a`, `input`, and `label` before ARIA-heavy fallbacks.
+- All form controls must have a visible label or an accessible name; placeholder text alone is not sufficient.
+- Focus states must be visible on all interactive elements. Accent focus is reserved for the active field and primary action; secondary controls may use a neutral slate outline or ring.
+- Async save and load status that changes in place should be announced with `aria-live="polite"` or equivalent.
+- Save failures and inline validation states should appear near the relevant action or field and use `role="alert"` or equivalent announced error treatment when appropriate.
+- Non-semantic interactive containers must support keyboard access, but Phase 1 should prefer semantic elements instead of recreating them.
 - White panels on slate backgrounds must preserve strong text contrast using the current slate palette.
 - Empty-state and error copy must be understandable without relying on color alone.
 
@@ -177,6 +213,9 @@ Accent reserved for: `保存设计` primary action, focused form fields, the act
 - [x] Dimension 3 Color: PASS
 - [x] Dimension 4 Typography: PASS
 - [x] Dimension 5 Spacing: PASS
-- [x] Dimension 6 Registry Safety: PASS
+- [x] Dimension 6 Accessibility: PASS
+- [x] Dimension 7 Responsive Behavior: PASS
+- [x] Dimension 8 Motion And Feedback: PASS
+- [x] Dimension 9 Registry Safety: PASS
 
 **Approval:** approved 2026-03-29
