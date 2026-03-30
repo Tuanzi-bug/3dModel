@@ -56,6 +56,13 @@ Requirements for the next execution roadmap, starting from the current brownfiel
 - [x] **LAND-03**: User can immediately understand the homepage value proposition and primary actions because title, supporting copy, and CTA remain clear above the preview
 - [x] **LAND-04**: User sees the first section below the hero remain visually consistent with the new product-led direction without expanding into a full-homepage redesign
 
+### Homepage Baseline Restore
+
+- [x] **RESTORE-01**: User sees the original landing-page hero copy and CTA hierarchy from the initial homepage baseline instead of the Phase 3.2 or 3.3 hero treatments
+- [x] **RESTORE-02**: User sees the simple `3D 预览区域` placeholder block again, and the homepage route no longer depends on `HeroPreview`-based preview components
+- [x] **RESTORE-03**: User sees the original three feature cards and supporting marketing copy from the initial landing page again
+- [x] **RESTORE-04**: User can load the homepage with tests aligned to the restored baseline rather than the superseded Phase 3.2 or 3.3 contracts
+
 ### Cross-Platform
 
 - [ ] **XPLT-01**: User can authenticate into a WeChat mini-program client using the project auth model
@@ -109,15 +116,19 @@ Requirements for the next execution roadmap, starting from the current brownfiel
 | LAND-02 | Phase 3.3 | Completed |
 | LAND-03 | Phase 3.3 | Completed |
 | LAND-04 | Phase 3.3 | Completed |
+| RESTORE-01 | Phase 3.4 | Complete |
+| RESTORE-02 | Phase 3.4 | Complete |
+| RESTORE-03 | Phase 3.4 | Complete |
+| RESTORE-04 | Phase 3.4 | Complete |
 | XPLT-01 | Phase 4 | Pending |
 | XPLT-02 | Phase 4 | Pending |
 | XPLT-03 | Phase 4 | Pending |
 
 **Coverage:**
-- v1 requirements: 28 total
-- Mapped to phases: 28
+- v1 requirements: 32 total
+- Mapped to phases: 32
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-29*
-*Last updated: 2026-03-30 after adding Phase 3.3 requirements*
+*Last updated: 2026-03-30 after adding Phase 3.4 homepage baseline-restore requirements*

@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: ready
-stopped_at: Phase 03.3 complete
-last_updated: "2026-03-30T11:42:38Z"
-last_activity: 2026-03-30 -- Completed Phase 03.3 static homepage hero polish and re-closed the landing page around a calmer product-led preview
+stopped_at: Phase 03.4 complete
+last_updated: "2026-03-30T13:46:30Z"
+last_activity: 2026-03-30 -- Completed Phase 03.4 homepage restore and returned the landing page to the original baseline
 progress:
-  total_phases: 8
-  completed_phases: 7
-  total_plans: 26
-  completed_plans: 26
-  percent: 88
+  total_phases: 9
+  completed_phases: 8
+  total_plans: 28
+  completed_plans: 28
+  percent: 89
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Users can quickly create, save, reopen, and refine modular shelf designs in a visual 3D workflow that feels reliable enough to keep using.
-**Current focus:** Phase 4 — WeChat Mini-Program
+**Current focus:** Phase 4 — wechat-mini-program
 
 ## Current Position
 
-Phase: 4 (WeChat Mini-Program) — NEXT UP
+Phase: 4 (wechat-mini-program) — NEXT UP
 Plan: Not started
-Status: Phase 03.3 is complete. The homepage now ships a static, product-led hero with quieter supporting content; mini-program expansion is the next roadmap step when ready.
-Last activity: 2026-03-30 -- Completed Phase 03.3 static homepage hero polish and re-closed the landing page around a calmer product-led preview
+Status: Phase 03.4 is complete. The homepage now matches the original landing baseline again; mini-program expansion is the next roadmap step when ready.
+Last activity: 2026-03-30 -- Completed Phase 03.4 homepage restore and returned the landing page to the original baseline
 
-Progress: █████████░ 88%
+Progress: █████████░ 89%
 
 ## Performance Metrics
 
@@ -51,11 +51,12 @@ Progress: █████████░ 88%
 | 03.1. Precision Usability Bugfixes | 4 | 1.1 hours | ~16 min |
 | 03.2. Homepage 3D Preview & Web Adaptation | 4 | 1.3 hours | ~20 min |
 | 03.3. Homepage Static Product Hero Polish | 3 | 0.5 hours | ~10 min |
+| 03.4. Homepage Original Landing Restore | 2 | 0.1 hours | ~3 min |
 
 **Recent Trend:**
 
-- Last 5 plans: 03.2-03, 03.2-04, 03.3-01, 03.3-02, 03.3-03
-- Trend: Homepage work pivoted away from live-3D marketing energy toward a calmer static product presentation; the roadmap is now ready to resume the deferred mini-program scope.
+- Last 5 plans: 03.3-01, 03.3-02, 03.3-03, 03.4-01, 03.4-02
+- Trend: Homepage work is back on the original landing baseline the user preferred, and the roadmap is now ready to resume the deferred mini-program scope.
 
 ## Accumulated Context
 
@@ -96,6 +97,9 @@ Recent decisions affecting current work:
 - [Exec] Phase 3.2 Plan 04 added homepage Playwright coverage for desktop and touch behavior, plus hydration-safe runtime capability detection for the hero preview
 - [Discuss] Phase 03.3 will reset the homepage hero around a static, realistic, product-led preview and explicitly avoid overdesigned demo energy
 - [Exec] Phase 03.3 replaced the interactive homepage hero path with a static product-led preview, calmer copy hierarchy, and breakpoint-specific browser coverage
+- [Plan] Insert Phase 03.4 after Phase 03.3 to restore the homepage to the original 42a3af0 landing baseline the user preferred
+- [Exec] Phase 03.4 restored the homepage route to the original 42a3af0 landing baseline and removed HeroPreview from the homepage path
+- [Exec] Phase 03.4 rewrote homepage browser coverage to validate the restored baseline instead of the 03.3 hero contract
 
 ### Roadmap Evolution
 
@@ -103,6 +107,8 @@ Recent decisions affecting current work:
 - Phase 03.2 requirements are now formalized as HERO-01 through HERO-04 before execution begins
 - Phase 03.3 inserted after Phase 03.2: Homepage Static Product Hero Polish (URGENT)
 - Phase 03.3 completed: the homepage hero now ships as a static product-led preview before Phase 4 resumes
+- Phase 03.4 inserted after Phase 03.3: Homepage Original Landing Restore (URGENT)
+- Phase 03.4 completed: the homepage was restored to the original landing-page baseline before Phase 4 resumes
 
 ### Pending Todos
 
@@ -115,6 +121,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T11:42:38Z
-Stopped at: Phase 03.3 complete
+Last session: 2026-03-30T13:46:30Z
+Stopped at: Phase 03.4 complete
 Resume file: .planning/ROADMAP.md

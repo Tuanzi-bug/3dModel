@@ -27,7 +27,8 @@ Before GSD initialization, the codebase already implements the equivalent of a s
 - [x] **Phase 3: Smart Snapping & Output** - Add precision assistance, advanced components, and BOM-oriented output
 - [x] **Phase 3.1: Precision Usability Bugfixes (INSERTED)** - Fix post-Phase-3 snapping feel, CSV export compatibility, and viewport focus/zoom regressions (completed 2026-03-30)
 - [x] **Phase 3.2: Homepage 3D Preview & Web Adaptation (INSERTED)** - Complete the landing-page hero 3D preview before broader web adaptation and mini-program expansion (completed 2026-03-30)
-- [ ] **Phase 3.3: Homepage Static Product Hero Polish (INSERTED)** - Reset the homepage hero around a static, product-led preview before any future live 3D revisit
+- [x] **Phase 3.3: Homepage Static Product Hero Polish (INSERTED)** - Reset the homepage hero around a static, product-led preview before any future live 3D revisit (completed 2026-03-30)
+- [x] **Phase 3.4: Homepage Original Landing Restore (INSERTED)** - Restore the homepage to the original landing-page baseline the user preferred before mini-program work resumes (completed 2026-03-30)
 - [ ] **Phase 4: WeChat Mini-Program** - Reuse the shared core model in a mini-program client
 
 ## Phase Details
@@ -155,9 +156,25 @@ Plans:
 - [x] 03.3-02-PLAN.md — Rework homepage copy/layout and lightly quiet the first section below the hero
 - [x] 03.3-03-PLAN.md — Replace the old interactive homepage browser regression with static hero coverage
 
+### Phase 03.4: Homepage Original Landing Restore (INSERTED)
+**Goal**: Restore the homepage to the original landing-page baseline from commit `42a3af0`, removing the Phase 3.2 and 3.3 hero treatments so the first screen matches the simpler page the user preferred.
+**Depends on**: Phase 3.3
+**Requirements**: [RESTORE-01, RESTORE-02, RESTORE-03, RESTORE-04]
+**UI hint**: yes
+**Success Criteria** (what must be TRUE):
+  1. The homepage hero title, supporting copy, CTA arrangement, preview placeholder, feature cards, CTA section, and footer match the original landing-page structure and content from the `42a3af0` baseline.
+  2. The homepage route no longer imports or renders `HeroPreview`, `HeroPreviewPoster`, or `HeroPreviewScene`; the simple `3D 预览区域` placeholder returns as the first-screen visual.
+  3. Homepage tests are realigned to the restored baseline and no longer assert the Phase 3.2 or 3.3 preview-specific contracts.
+  4. The rollback stays scoped to the homepage surface and its tests; it does not reopen editor, dashboard, or mini-program scope.
+**Plans**: 2 plans
+
+Plans:
+- [x] 03.4-01-PLAN.md — Restore the homepage route to the original landing baseline and retire the obsolete HeroPreview unit test
+- [x] 03.4-02-PLAN.md — Rewrite homepage Playwright coverage to the restored original baseline
+
 ### Phase 4: WeChat Mini-Program
 **Goal**: Extend the product to a WeChat mini-program while preserving shared core business logic across platforms.
-**Depends on**: Phase 3.3
+**Depends on**: Phase 3.4
 **Requirements**: [XPLT-01, XPLT-02, XPLT-03]
 **UI hint**: yes
 **Success Criteria** (what must be TRUE):
@@ -169,7 +186,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 2.1 → 3 → 3.1 → 3.2 → 3.3 → 4
+Phases execute in numeric order: 1 → 2 → 2.1 → 3 → 3.1 → 3.2 → 3.3 → 3.4 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -180,4 +197,5 @@ Phases execute in numeric order: 1 → 2 → 2.1 → 3 → 3.1 → 3.2 → 3.3 �
 | 3.1. Precision Usability Bugfixes | 4/4 | Complete    | 2026-03-30 |
 | 3.2. Homepage 3D Preview & Web Adaptation | 4/4 | Completed | 2026-03-30 |
 | 3.3. Homepage Static Product Hero Polish | 3/3 | Completed | 2026-03-30 |
+| 3.4. Homepage Original Landing Restore | 2/2 | Completed | 2026-03-30 |
 | 4. WeChat Mini-Program | 0/TBD | Not started | - |
