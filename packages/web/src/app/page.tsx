@@ -1,11 +1,12 @@
 import Link from 'next/link'
 import { Box, Grid3x3, Zap } from 'lucide-react'
 
+import { HeroPreview } from '@/components/landing/HeroPreview'
+
 export default function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* 导航栏 - 桌面浮动，移动固定顶部 */}
-      <nav className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-sm border-b border-slate-200 px-6 py-3 shadow-sm z-50 max-md:px-4">
+    <div className="min-h-screen flex flex-col bg-slate-50">
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200 bg-white/90 px-6 py-3 backdrop-blur-sm shadow-sm max-md:px-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Box className="w-6 h-6 text-orange-500" />
@@ -28,83 +29,81 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 max-md:px-4 pt-24 max-md:pt-20 pb-16">
-        <div className="max-w-4xl mx-auto text-center space-y-6 max-md:space-y-4">
-          <h1 className="text-4xl max-md:text-3xl font-bold text-slate-900 leading-tight">
-            专业的 3D 模块化货架设计工具
-          </h1>
-          <p className="text-lg max-md:text-base text-slate-600 max-w-2xl mx-auto">
-            实时 3D 可视化，所见即所得。选择模板，调整尺寸，立即预览你的设计效果。
-          </p>
-          <div className="flex items-center justify-center gap-4 max-md:flex-col max-md:w-full pt-4">
-            <Link
-              href="/register"
-              className="px-6 py-3 max-md:w-full max-md:text-center bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg transition-colors duration-200 cursor-pointer shadow-sm"
-            >
-              开始设计
-            </Link>
-            <Link
-              href="/login"
-              className="px-6 py-3 max-md:w-full max-md:text-center border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium rounded-lg transition-colors duration-200 cursor-pointer"
-            >
-              查看示例
-            </Link>
+      <main className="flex-1 px-6 pb-16 pt-28 max-md:px-4 max-md:pb-12 max-md:pt-24">
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-center">
+          <div
+            data-testid="landing-hero-copy"
+            className="mx-auto flex max-w-3xl flex-col items-center text-center"
+          >
+            <p className="text-xs font-medium uppercase tracking-[0.26em] text-slate-500">
+              模块化货架设计平台
+            </p>
+            <h1 className="mt-4 text-4xl font-bold leading-tight text-slate-900 max-md:text-3xl">
+              用更可信的方式预览模块化货架方案
+            </h1>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600 max-md:text-sm max-md:leading-6">
+              在进入细节建模前，先确认结构比例、层板关系与材质方向，让方案沟通更接近真实产品展示。
+            </p>
+            <div className="mt-8 flex items-center justify-center gap-4 max-md:w-full max-md:flex-col">
+              <Link
+                href="/register"
+                className="rounded-lg bg-orange-500 px-6 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-orange-600 max-md:w-full max-md:text-center"
+              >
+                开始设计
+              </Link>
+              <Link
+                href="/login"
+                className="rounded-lg border border-slate-300 bg-white px-6 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-100 max-md:w-full max-md:text-center"
+              >
+                查看示例
+              </Link>
+            </div>
           </div>
-        </div>
 
-        {/* 3D 预览占位 - 后续会替换为真实的 3D 场景 */}
-        <div className="mt-16 max-md:mt-12 w-full max-w-5xl">
-          <div className="bg-slate-100 rounded-xl border border-slate-200 aspect-video flex items-center justify-center">
-            <div className="text-center space-y-3">
-              <Box className="w-16 h-16 max-md:w-12 max-md:h-12 text-slate-400 mx-auto" />
-              <p className="text-slate-500 text-sm max-md:text-xs">3D 预览区域</p>
+          <div className="mt-10 w-full max-w-6xl">
+            <div className="rounded-[36px] border border-slate-200/80 bg-white p-3 shadow-[0_24px_70px_rgba(15,23,42,0.06)] max-md:rounded-[28px] max-md:p-2.5">
+              <HeroPreview />
             </div>
           </div>
         </div>
       </main>
 
-      {/* Features Section */}
-      <section className="py-16 max-md:py-12 px-6 max-md:px-4 bg-white border-t border-slate-200">
+      <section className="border-t border-slate-200 bg-white px-6 py-16 max-md:px-4 max-md:py-12">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-3 max-md:grid-cols-1 gap-8 max-md:gap-6">
-            {/* Feature 1 */}
-            <div className="text-center space-y-3">
-              <div className="w-12 h-12 max-md:w-10 max-md:h-10 bg-orange-100 rounded-lg flex items-center justify-center mx-auto">
-                <Box className="w-6 h-6 max-md:w-5 max-md:h-5 text-orange-500" />
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 text-center shadow-sm">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-slate-700 shadow-[0_8px_18px_rgba(15,23,42,0.05)] max-md:h-10 max-md:w-10">
+                <Box className="h-6 w-6 max-md:h-5 max-md:w-5" />
               </div>
-              <h3 className="text-lg max-md:text-base font-semibold text-slate-900">实时 3D 可视化</h3>
-              <p className="text-sm max-md:text-xs text-slate-600">
-                所见即所得，实时预览你的设计效果，支持 360° 旋转查看
+              <h3 className="mt-4 text-lg font-semibold text-slate-900 max-md:text-base">先看整体比例</h3>
+              <p className="mt-3 text-sm leading-6 text-slate-600 max-md:text-xs">
+                主图预览优先展示宽高深与层板分布，减少首屏演示噪音。
               </p>
             </div>
 
-            {/* Feature 2 */}
-            <div className="text-center space-y-3">
-              <div className="w-12 h-12 max-md:w-10 max-md:h-10 bg-orange-100 rounded-lg flex items-center justify-center mx-auto">
-                <Grid3x3 className="w-6 h-6 max-md:w-5 max-md:h-5 text-orange-500" />
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 text-center shadow-sm">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-slate-700 shadow-[0_8px_18px_rgba(15,23,42,0.05)] max-md:h-10 max-md:w-10">
+                <Grid3x3 className="h-6 w-6 max-md:h-5 max-md:w-5" />
               </div>
-              <h3 className="text-lg max-md:text-base font-semibold text-slate-900">丰富的模板库</h3>
-              <p className="text-sm max-md:text-xs text-slate-600">
-                多种预设模板，适用于家居、仓储、零售等不同场景
+              <h3 className="mt-4 text-lg font-semibold text-slate-900 max-md:text-base">再调材质与规格</h3>
+              <p className="mt-3 text-sm leading-6 text-slate-600 max-md:text-xs">
+                进入编辑器后继续细化杆件、层板与组合参数。
               </p>
             </div>
 
-            {/* Feature 3 */}
-            <div className="text-center space-y-3">
-              <div className="w-12 h-12 max-md:w-10 max-md:h-10 bg-orange-100 rounded-lg flex items-center justify-center mx-auto">
-                <Zap className="w-6 h-6 max-md:w-5 max-md:h-5 text-orange-500" />
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 text-center shadow-sm">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-slate-700 shadow-[0_8px_18px_rgba(15,23,42,0.05)] max-md:h-10 max-md:w-10">
+                <Zap className="h-6 w-6 max-md:h-5 max-md:w-5" />
               </div>
-              <h3 className="text-lg max-md:text-base font-semibold text-slate-900">快速导出</h3>
-              <p className="text-sm max-md:text-xs text-slate-600">
-                一键导出设计方案，支持多种格式，方便分享和施工
+              <h3 className="mt-4 text-lg font-semibold text-slate-900 max-md:text-base">输出可沟通方案</h3>
+              <p className="mt-3 text-sm leading-6 text-slate-600 max-md:text-xs">
+                从首页预览到后续导出保持一致的产品语言。
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-16 max-md:py-12 px-6 max-md:px-4 bg-slate-50">
         <div className="max-w-4xl mx-auto text-center space-y-6 max-md:space-y-4">
           <h2 className="text-3xl max-md:text-2xl font-bold text-slate-900">
@@ -122,7 +121,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="py-8 max-md:py-6 px-6 max-md:px-4 border-t border-slate-200 bg-white">
         <div className="max-w-6xl mx-auto text-center text-sm max-md:text-xs text-slate-500">
           © 2026 ShelfCraft. 专业的 3D 模块化货架设计工具
