@@ -36,6 +36,12 @@ Requirements for the next execution roadmap, starting from the current brownfiel
 - [x] **SNAP-03**: User can view preset camera angles and dimension aids while editing
 - [x] **OUT-01**: User can export a BOM / parts list for the current design
 
+### Post-Phase-3 Bugfixes
+
+- [ ] **FIX-05**: User can move components without over-aggressive real-time snapping; valid component/grid snap resolves when the drag completes
+- [ ] **FIX-06**: User can open the exported BOM CSV in Excel without Chinese text becoming garbled
+- [ ] **FIX-07**: User can deselect without camera jumps and can explicitly focus the selected component plus zoom in/out from the viewport controls
+
 ### Cross-Platform
 
 - [ ] **XPLT-01**: User can authenticate into a WeChat mini-program client using the project auth model
@@ -78,6 +84,9 @@ Requirements for the next execution roadmap, starting from the current brownfiel
 | SNAP-02 | Phase 3 | Completed |
 | SNAP-03 | Phase 3 | Completed |
 | OUT-01 | Phase 3 | Completed |
+| FIX-05 | Phase 3.1 | Pending |
+| FIX-06 | Phase 3.1 | Pending |
+| FIX-07 | Phase 3.1 | Pending |
 | XPLT-01 | Phase 4 | Pending |
 | XPLT-02 | Phase 4 | Pending |
 | XPLT-03 | Phase 4 | Pending |

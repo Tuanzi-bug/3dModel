@@ -25,6 +25,7 @@ Before GSD initialization, the codebase already implements the equivalent of a s
 - [x] **Phase 2: Freeform Builder** - Add create-from-empty, component placement, and direct scene editing workflows
 - [x] **Phase 2.1: Freeform Stability & Preview Polish (INSERTED)** - Fix newly discovered freeform regressions and preview fidelity issues before precision work continues
 - [x] **Phase 3: Smart Snapping & Output** - Add precision assistance, advanced components, and BOM-oriented output
+- [ ] **Phase 3.1: Precision Usability Bugfixes (INSERTED)** - Fix post-Phase-3 snapping feel, CSV export compatibility, and viewport focus/zoom regressions
 - [ ] **Phase 4: WeChat Mini-Program** - Reuse the shared core model in a mini-program client
 
 ## Phase Details
@@ -100,9 +101,20 @@ Plans:
 - [x] 03-03-PLAN.md — Add preset camera views and dimension aids to the viewport
 - [x] 03-04-PLAN.md — Export a BOM / parts list and lock the precision workflow with browser coverage
 
+### Phase 3.1: Precision Usability Bugfixes (INSERTED)
+**Goal**: Resolve the interaction regressions discovered immediately after Phase 3 so the precision workflow feels controllable before cross-platform work begins.
+**Depends on**: Phase 3
+**Requirements**: [FIX-05, FIX-06, FIX-07]
+**UI hint**: yes
+**Success Criteria** (what must be TRUE):
+  1. User can drag components at a predictable pace and still get snap assistance when releasing near valid anchors or grid positions.
+  2. User can open the exported BOM CSV directly in Excel without Chinese text turning into mojibake.
+  3. User can click empty space to deselect without camera jumps, and can explicitly focus the selected component plus zoom in/out from the viewport chrome.
+**Plans**: TBD
+
 ### Phase 4: WeChat Mini-Program
 **Goal**: Extend the product to a WeChat mini-program while preserving shared core business logic across platforms.
-**Depends on**: Phase 3
+**Depends on**: Phase 3.1
 **Requirements**: [XPLT-01, XPLT-02, XPLT-03]
 **UI hint**: yes
 **Success Criteria** (what must be TRUE):
@@ -114,7 +126,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 2.1 → 3 → 4
+Phases execute in numeric order: 1 → 2 → 2.1 → 3 → 3.1 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -122,4 +134,5 @@ Phases execute in numeric order: 1 → 2 → 2.1 → 3 → 4
 | 2. Freeform Builder | 4/4 | Completed | 2026-03-30 |
 | 2.1. Freeform Stability & Preview Polish | 4/4 | Completed | 2026-03-30 |
 | 3. Smart Snapping & Output | 4/4 | Completed | 2026-03-30 |
+| 3.1. Precision Usability Bugfixes | 0/TBD | Ready to plan | - |
 | 4. WeChat Mini-Program | 0/TBD | Not started | - |

@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: ready_to_plan
-stopped_at: Phase 04 ready to plan
-last_updated: "2026-03-30T17:50:00+08:00"
-last_activity: 2026-03-30 -- Completed Phase 3 smart snapping, precision inspection, and BOM export with Docker-based verification
+stopped_at: Phase 03.1 context gathered
+last_updated: "2026-03-30T19:05:00+08:00"
+last_activity: 2026-03-30 -- Captured Phase 3.1 decisions for snap-on-release, Excel-safe CSV export, and viewport focus/zoom bugfixes
 progress:
-  total_phases: 5
+  total_phases: 6
   completed_phases: 4
   total_plans: 0
   completed_plans: 0
-  percent: 80
+  percent: 67
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Users can quickly create, save, reopen, and refine modular shelf designs in a visual 3D workflow that feels reliable enough to keep using.
-**Current focus:** Phase 04 — wechat-mini-program
+**Current focus:** Phase 03.1 — precision-usability-bugfixes
 
 ## Current Position
 
-Phase: 04 (wechat-mini-program) — READY TO PLAN
+Phase: 03.1 (precision-usability-bugfixes) — READY TO PLAN
 Plan: 0 of 0
-Status: Phase 04 ready to plan
-Last activity: 2026-03-30 -- Completed Phase 3 smart snapping, precision inspection, and BOM export with Docker-based verification
+Status: Phase 03.1 context gathered; ready to plan
+Last activity: 2026-03-30 -- Captured Phase 3.1 decisions for snap-on-release, Excel-safe CSV export, and viewport focus/zoom bugfixes
 
-Progress: ████████░░ 80%
+Progress: ███████░░░ 67%
 
 ## Performance Metrics
 
@@ -52,7 +52,7 @@ Progress: ████████░░ 80%
 **Recent Trend:**
 
 - Last 5 plans: 02.1-04, 03-01, 03-02, 03-03, 03-04
-- Trend: Stable execution with shared-core precision logic, browser export coverage, and Docker-only verification
+- Trend: Execution is stable, but a small inserted bugfix phase is now queued to refine post-Phase-3 usability before Phase 4
 
 ## Accumulated Context
 
@@ -79,6 +79,7 @@ Recent decisions affecting current work:
 - [Plan] Phase 3 will keep snap, bounds, and BOM logic in `packages/core`, with thin viewport/header integration in the web app
 - [Exec] Phase 3 snapping, bounds, and BOM rules now live in `packages/core` and drive both editor UX and export output
 - [Exec] Header export downloads BOM CSV directly from canonical sceneGraph data without server-side formatting
+- [Discuss] Phase 3.1 will change snapping to snap-on-release, keep BOM export as CSV with Excel-compatible encoding, and add explicit viewport focus/zoom controls without camera jumps on deselect
 
 ### Pending Todos
 
@@ -91,6 +92,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T17:50:00+08:00
-Stopped at: Phase 04 ready to plan
-Resume file: .planning/ROADMAP.md
+Last session: 2026-03-30T19:05:00+08:00
+Stopped at: Phase 03.1 context gathered
+Resume file: .planning/phases/03.1-precision-usability-bugfixes/03.1-CONTEXT.md

@@ -25,6 +25,7 @@ Users can quickly create, save, reopen, and refine modular shelf designs in a vi
 
 ### Active
 
+- [ ] Fix post-Phase-3 snapping feel, CSV export compatibility, and viewport focus/zoom behavior before Phase 4 planning
 - [ ] Reuse the shared core logic in a WeChat mini-program client
 
 ### Out of Scope
@@ -65,6 +66,7 @@ Users can quickly create, save, reopen, and refine modular shelf designs in a vi
 | Show unsupported palette entries as disabled instead of clickable | False affordances were creating broken interactions and obscuring the true supported surface | ✓ Good |
 | Improve preview fidelity by switching to an x-axis SVG side view and `object-contain` dashboard rendering | Users asked for previews that better resemble the built scene without replacing the deterministic preview pipeline | ✓ Good |
 | Keep BOM export as a thin header action backed by pure core CSV generation | Output should come from canonical scene data and stay reusable by future clients | ✓ Good |
+| Insert Phase 3.1 before Phase 4 when the new precision workflow regresses on feel, export compatibility, or camera usability | Tight usability fixes should land before cross-platform expansion inherits the wrong behavior | ✓ Good |
 
 ## Evolution
 
@@ -84,4 +86,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-30 after completing Phase 3*
+*Last updated: 2026-03-30 after inserting Phase 3.1 for precision usability bugfixes*
