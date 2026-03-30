@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: ready_to_execute
-stopped_at: Phase 03.1 planned
-last_updated: "2026-03-30T20:10:00+08:00"
-last_activity: 2026-03-30 -- Planned Phase 3.1 across snap-on-release, Excel-safe CSV export, viewport focus/zoom controls, and regression coverage
+status: in_progress
+stopped_at: Phase 03.1 plan 01 completed
+last_updated: "2026-03-30T20:36:00+08:00"
+last_activity: 2026-03-30 -- Completed Phase 03.1 Plan 01 for snap-on-release translate movement and viewport timing coverage
 progress:
   total_phases: 6
   completed_phases: 4
   total_plans: 4
-  completed_plans: 0
-  percent: 67
+  completed_plans: 1
+  percent: 71
 ---
 
 # Project State
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-03-30)
 
 ## Current Position
 
-Phase: 03.1 (precision-usability-bugfixes) — READY TO EXECUTE
-Plan: 0 of 4
-Status: Phase 03.1 planned; ready to execute
-Last activity: 2026-03-30 -- Planned Phase 3.1 across snap-on-release, Excel-safe CSV export, viewport focus/zoom controls, and regression coverage
+Phase: 03.1 (precision-usability-bugfixes) — IN PROGRESS
+Plan: 1 of 4
+Status: Phase 03.1 execution in progress after completing snap-on-release movement fixes
+Last activity: 2026-03-30 -- Completed Phase 03.1 Plan 01 for snap-on-release translate movement and viewport timing coverage
 
 Progress: ███████░░░ 67%
 
@@ -81,6 +81,7 @@ Recent decisions affecting current work:
 - [Exec] Header export downloads BOM CSV directly from canonical sceneGraph data without server-side formatting
 - [Discuss] Phase 3.1 will change snapping to snap-on-release, keep BOM export as CSV with Excel-compatible encoding, and add explicit viewport focus/zoom controls without camera jumps on deselect
 - [Plan] Phase 3.1 is split into snap-release movement, Excel-safe BOM export, viewport camera recovery controls, and final browser regression coverage
+- [Exec] Phase 3.1 Plan 01 moved translate snapping to drag release and added viewport timing regression coverage
 
 ### Pending Todos
 
@@ -93,6 +94,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T20:10:00+08:00
-Stopped at: Phase 03.1 planned
-Resume file: .planning/phases/03.1-precision-usability-bugfixes/03.1-01-PLAN.md
+Last session: 2026-03-30T20:36:00+08:00
+Stopped at: Phase 03.1 plan 01 completed
+Resume file: .planning/phases/03.1-precision-usability-bugfixes/03.1-02-PLAN.md

@@ -65,6 +65,10 @@ export function ViewportCanvas() {
   const orbitControlsRef = useRef<any>(null)
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null)
   const [activePreset, setActivePreset] = useState<ViewPreset>('iso')
+  const transformDragRef = useRef<{
+    position: [number, number, number]
+    rotation: [number, number, number]
+  } | null>(null)
   const bounds = getSceneBounds(sceneGraph, selectedNodeId) ?? getSceneBounds(sceneGraph)
 
   const handleSelectGroup = useCallback((group: Group | null, nodeId: string) => {
@@ -145,6 +149,7 @@ export function ViewportCanvas() {
             object={selectedGroup}
             mode={transformMode}
             onMouseDown={() => {
+              transformDragRef.current = null
               if (orbitControlsRef.current) {
                 orbitControlsRef.current.enabled = false
               }
@@ -153,20 +158,43 @@ export function ViewportCanvas() {
               if (orbitControlsRef.current) {
                 orbitControlsRef.current.enabled = true
               }
+
+              if (!selectedGroup || transformMode !== 'translate') {
+                transformDragRef.current = null
+                return
+              }
+
+              const latestTransform = transformDragRef.current ?? {
+                position: [selectedGroup.position.x, selectedGroup.position.y, selectedGroup.position.z],
+                rotation: [selectedGroup.rotation.x, selectedGroup.rotation.y, selectedGroup.rotation.z],
+              }
+              const snapped = resolveSnapPosition(sceneGraph, latestTransform.position, {
+                movingNodeId: selectedNodeId,
+              })
+
+              selectedGroup.position.set(...snapped.position)
+              updateNodeTransform(selectedNodeId, {
+                position: snapped.position,
+                rotation: latestTransform.rotation,
+              })
+              transformDragRef.current = null
             }}
             onObjectChange={(e) => {
               if (e?.target?.object) {
                 const pos = e.target.object.position
                 const rotation = e.target.object.rotation
-                const snapped = resolveSnapPosition(
-                  sceneGraph,
-                  [pos.x, pos.y, pos.z],
-                  { movingNodeId: selectedNodeId },
-                )
-                e.target.object.position.set(...snapped.position)
+                const nextTransform = {
+                  position: [pos.x, pos.y, pos.z] as [number, number, number],
+                  rotation: [rotation.x, rotation.y, rotation.z] as [number, number, number],
+                }
+
+                if (transformMode === 'translate') {
+                  transformDragRef.current = nextTransform
+                  return
+                }
+
                 updateNodeTransform(selectedNodeId, {
-                  position: snapped.position,
-                  rotation: [rotation.x, rotation.y, rotation.z],
+                  rotation: nextTransform.rotation,
                 })
               }
             }}
