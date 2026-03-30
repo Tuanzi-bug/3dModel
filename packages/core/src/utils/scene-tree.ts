@@ -62,19 +62,36 @@ export function removeNode(root: SceneNode, id: string): SceneNode {
   } as SceneNode
 }
 
-function cloneSubtree(node: SceneNode): SceneNode {
+export interface DuplicateNodeResult {
+  sceneGraph: SceneNode
+  duplicatedRootId: string | null
+}
+
+function cloneSubtree(
+  node: SceneNode,
+  createId: (type: string) => string,
+): SceneNode {
   return {
     ...node,
-    id: generateId(),
-    children: node.children.map(cloneSubtree),
+    id: createId(node.type),
+    children: node.children.map((child) => cloneSubtree(child, createId)),
   } as SceneNode
 }
 
-export function duplicateNode(root: SceneNode, id: string): SceneNode {
+export function duplicateNodeWithFactory(
+  root: SceneNode,
+  id: string,
+  createId: (type: string) => string,
+): DuplicateNodeResult {
   const target = findNode(root, id)
-  if (!target || root.id === id) return root
+  if (!target || root.id === id) {
+    return {
+      sceneGraph: root,
+      duplicatedRootId: null,
+    }
+  }
 
-  const dup = cloneSubtree(target)
+  const dup = cloneSubtree(target, createId)
 
   function appendInTree(node: SceneNode): SceneNode {
     if (node.children.some((c) => c.id === id)) {
@@ -86,5 +103,34 @@ export function duplicateNode(root: SceneNode, id: string): SceneNode {
     } as SceneNode
   }
 
-  return appendInTree(root)
+  return {
+    sceneGraph: appendInTree(root),
+    duplicatedRootId: dup.id,
+  }
+}
+
+export function duplicateNode(root: SceneNode, id: string): SceneNode {
+  return duplicateNodeWithFactory(root, id, () => generateId()).sceneGraph
+}
+
+/**
+ * Regenerate all node IDs in a scene graph using a custom ID generator.
+ * Preserves tree structure but assigns new IDs to all nodes.
+ *
+ * @param node - The root node of the scene graph
+ * @param generateId - Function that takes a node type and returns a new ID
+ * @returns A new scene graph with regenerated IDs
+ */
+export function regenerateNodeIds(
+  node: SceneNode,
+  generateId: (type: string) => string
+): SceneNode {
+  // Special case: preserve 'root' ID
+  const newId = node.id === 'root' ? 'root' : generateId(node.type)
+
+  return {
+    ...node,
+    id: newId,
+    children: node.children.map((child) => regenerateNodeIds(child, generateId)),
+  } as SceneNode
 }

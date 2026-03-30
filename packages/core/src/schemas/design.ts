@@ -9,6 +9,7 @@ export const createDesignSchema = z.object({
 
 export const updateDesignSchema = z.object({
   name: z.string().min(1).max(255).optional(),
+  templateId: z.string().nullable().optional(),
   sceneGraph: sceneNodeSchema.optional(),
   thumbnail: z.string().max(2_000_000).nullable().optional(),
 })

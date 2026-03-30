@@ -12,6 +12,10 @@ export * from './schemas/template'
 // Utils
 export * from './utils/id'
 export * from './utils/scene-tree'
+export * from './utils/scene-preview'
+export * from './utils/snap'
+export * from './utils/scene-bounds'
+export * from './utils/bom'
 
 // Templates
 export * from './templates/single-shelf'

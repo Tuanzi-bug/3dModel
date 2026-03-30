@@ -1,6 +1,7 @@
 import type { SceneNode } from '../types/scene'
 import type { TemplateDefinition, TemplateParams } from '../types/template'
 import { generateId } from '../utils/id'
+import { generateScenePreviewDataUrl } from '../utils/scene-preview'
 
 function generate(params: TemplateParams): SceneNode {
   const { width, depth, height, layers, rodDiameter, shelfMaterial } = params
@@ -60,18 +61,20 @@ function generate(params: TemplateParams): SceneNode {
   }
 }
 
+const defaultParams: TemplateParams = {
+  width: 0.8,
+  height: 1.0,
+  depth: 0.4,
+  layers: 2,
+  rodDiameter: 8,
+  shelfMaterial: 'wood',
+}
+
 export const standaloneTemplate: TemplateDefinition = {
   id: 'standalone',
   name: '独立货架',
   category: 'standalone',
-  thumbnail: '',
-  defaultParams: {
-    width: 0.8,
-    height: 1.0,
-    depth: 0.4,
-    layers: 2,
-    rodDiameter: 8,
-    shelfMaterial: 'wood',
-  },
+  thumbnail: generateScenePreviewDataUrl(generate(defaultParams)),
+  defaultParams,
   generate,
 }
