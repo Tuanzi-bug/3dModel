@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in_progress
-stopped_at: Phase 03.1 plan 03 completed
-last_updated: "2026-03-30T20:48:00+08:00"
-last_activity: 2026-03-30 -- Completed Phase 03.1 Plan 03 for viewport focus and deselection stability
+status: planning
+stopped_at: Phase 03.1 completed
+last_updated: "2026-03-30T03:16:14.658Z"
+last_activity: 2026-03-30
 progress:
   total_phases: 6
-  completed_phases: 4
-  total_plans: 4
-  completed_plans: 3
-  percent: 79
+  completed_phases: 5
+  total_plans: 19
+  completed_plans: 19
+  percent: 67
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-30)
 
 **Core value:** Users can quickly create, save, reopen, and refine modular shelf designs in a visual 3D workflow that feels reliable enough to keep using.
-**Current focus:** Phase 03.1 — precision-usability-bugfixes
+**Current focus:** Phase 04 — wechat-mini-program
 
 ## Current Position
 
-Phase: 03.1 (precision-usability-bugfixes) — IN PROGRESS
-Plan: 3 of 4
-Status: Phase 03.1 execution in progress after completing viewport camera-control fixes
-Last activity: 2026-03-30 -- Completed Phase 03.1 Plan 03 for viewport focus and deselection stability
+Phase: 4
+Plan: Not started
+Status: Phase 03.1 completed; ready to plan Phase 04
+Last activity: 2026-03-30
 
 Progress: ███████░░░ 67%
 
@@ -84,6 +84,7 @@ Recent decisions affecting current work:
 - [Exec] Phase 3.1 Plan 01 moved translate snapping to drag release and added viewport timing regression coverage
 - [Exec] Phase 3.1 Plan 02 made BOM CSV exports Excel-safe with a UTF-8 BOM while keeping the plain CSV contract
 - [Exec] Phase 3.1 Plan 03 made deselection camera-safe and added explicit viewport focus/zoom controls
+- [Exec] Phase 3.1 Plan 04 added browser regression coverage for repaired precision controls, camera state, and Excel-safe export bytes
 
 ### Pending Todos
 
@@ -96,6 +97,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T20:48:00+08:00
-Stopped at: Phase 03.1 plan 03 completed
-Resume file: .planning/phases/03.1-precision-usability-bugfixes/03.1-04-PLAN.md
+Last session: 2026-03-30T20:56:00+08:00
+Stopped at: Phase 03.1 completed
+Resume file: .planning/ROADMAP.md
