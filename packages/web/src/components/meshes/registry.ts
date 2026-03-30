@@ -3,8 +3,16 @@ import { CrossClampMesh } from './CrossClampMesh'
 import { FixedRingMesh } from './FixedRingMesh'
 import { TeeMesh } from './TeeMesh'
 import { ShelfMesh } from './ShelfMesh'
+import { LedStripMesh } from './LedStripMesh'
+import { BackPanelMesh } from './BackPanelMesh'
 import type { SceneNodeType } from '@3d-modeler/core'
 import type { ComponentType } from 'react'
+
+const freeformComponentTypes = new Set<SceneNodeType>(['rod', 'shelf', 'ledStrip', 'backPanel'])
+
+export function isFreeformComponentEnabled(type: SceneNodeType) {
+  return freeformComponentTypes.has(type)
+}
 
 export const componentRegistry: Partial<Record<SceneNodeType, ComponentType<{ params: any; nodeId: string }>>> = {
   rod: RodMesh,
@@ -12,5 +20,6 @@ export const componentRegistry: Partial<Record<SceneNodeType, ComponentType<{ pa
   fixedRing: FixedRingMesh,
   teeConnector: TeeMesh,
   shelf: ShelfMesh,
-  // ledStrip and backPanel are Phase 3 — not registered
+  ledStrip: LedStripMesh,
+  backPanel: BackPanelMesh,
 }

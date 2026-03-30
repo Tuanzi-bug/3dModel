@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { updateDesignSchema } from '@3d-modeler/core'
+import { generateScenePreviewDataUrl, updateDesignSchema } from '@3d-modeler/core'
 import { prisma } from '@/lib/prisma'
 import { withAuth, isAuthError } from '@/lib/with-auth'
 
@@ -82,8 +82,13 @@ export async function PATCH(
 
   const updateData: Record<string, unknown> = {}
   if (parsed.data.name !== undefined) updateData.name = parsed.data.name
+  if (parsed.data.templateId !== undefined) updateData.templateId = parsed.data.templateId
   if (parsed.data.sceneGraph !== undefined) updateData.sceneGraph = JSON.stringify(parsed.data.sceneGraph)
-  if (parsed.data.thumbnail !== undefined) updateData.thumbnail = parsed.data.thumbnail
+  if (parsed.data.thumbnail !== undefined) {
+    updateData.thumbnail = parsed.data.thumbnail
+  } else if (parsed.data.sceneGraph !== undefined) {
+    updateData.thumbnail = generateScenePreviewDataUrl(parsed.data.sceneGraph)
+  }
 
   const updated = await prisma.design.update({ where: { id }, data: updateData })
 

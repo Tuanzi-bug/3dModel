@@ -1,13 +1,52 @@
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
+import type { SceneNode } from '@3d-modeler/core'
 
-// ─────────────────────────────────────────────
-// Dashboard 页面测试
-// ─────────────────────────────────────────────
+const templatePreview = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20160%20120%22%3E%3Crect%20width%3D%22160%22%20height%3D%22120%22%20rx%3D%2218%22%20fill%3D%22%23e2e8f0%22/%3E%3Crect%20x%3D%2228%22%20y%3D%2228%22%20width%3D%22104%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%23ffffff%22/%3E%3C/svg%3E'
+const designPreview = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20160%20120%22%3E%3Crect%20width%3D%22160%22%20height%3D%22120%22%20rx%3D%2218%22%20fill%3D%22%23dbeafe%22/%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2260%22%20r%3D%2224%22%20fill%3D%22%233b82f6%22/%3E%3C/svg%3E'
+
+const emptyScene: SceneNode = {
+  id: 'root',
+  type: 'group',
+  position: [0, 0, 0],
+  rotation: [0, 0, 0],
+  params: {},
+  children: [],
+}
+
 test.describe('Dashboard 页面', () => {
   test.beforeEach(async ({ page }) => {
-    // 模拟 API 响应
-    await page.route('/api/designs', route =>
-      route.fulfill({
+    await page.route('**/api/designs', async route => {
+      const request = route.request()
+
+      if (request.method() === 'POST') {
+        const payload = request.postDataJSON() as {
+          name: string
+          templateId: string | null
+          sceneGraph: SceneNode
+        }
+
+        const id = payload.templateId ? 'new-design-id' : 'freeform-design-id'
+        await route.fulfill({
+          status: 201,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              id,
+              name: payload.name,
+              userId: 'test-user-id',
+              templateId: payload.templateId,
+              sceneGraph: payload.sceneGraph,
+              thumbnail: designPreview,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+          }),
+        })
+        return
+      }
+
+      await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
@@ -17,94 +56,115 @@ test.describe('Dashboard 页面', () => {
               id: 'design-1',
               name: '我的货架设计',
               userId: 'test-user-id',
-              sceneGraph: {},
-              thumbnail: null,
+              templateId: null,
+              thumbnail: designPreview,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             },
           ],
         }),
       })
-    )
+    })
 
-    await page.route('/api/templates', route =>
-      route.fulfill({
+    await page.route('**/api/designs/*', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          data: {
+            id: 'design-1',
+            name: '我的货架设计',
+            userId: 'test-user-id',
+            templateId: null,
+            sceneGraph: emptyScene,
+            thumbnail: designPreview,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+        }),
+      })
+    })
+
+    await page.route('**/api/templates', async route => {
+      await route.fulfill({
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
           success: true,
           data: [
-            { id: 'single-shelf', name: '单层货架', description: '简单的单层货架' },
-            { id: 'multi-shelf', name: '多层货架', description: '多层货架系统' },
+            { id: 'single-shelf', name: '单层货架', category: 'single', thumbnail: templatePreview, defaultParams: { width: 0.8, height: 1.0, depth: 0.4, layers: 1, rodDiameter: 8, shelfMaterial: 'wood' } },
+            { id: 'multi-shelf', name: '多层货架', category: 'multi', thumbnail: templatePreview, defaultParams: { width: 0.8, height: 1.5, depth: 0.4, layers: 4, rodDiameter: 8, shelfMaterial: 'wood' } },
           ],
         }),
       })
-    )
+    })
 
-    // 访问 dashboard（假设已登录）
     await page.goto('/dashboard')
     await page.waitForLoadState('networkidle')
   })
 
-  test('页面元素正确渲染', async ({ page }) => {
-    // 品牌名称
+  test('renders the empty-canvas entry and preview images', async ({ page }) => {
+    const templateImage = page.getByRole('img', { name: '单层货架预览图' })
+    const secondTemplateImage = page.getByRole('img', { name: '多层货架预览图' })
+    const savedDesignImage = page.getByRole('img', { name: '我的货架设计预览图' })
+
     await expect(page.getByText('ShelfCraft')).toBeVisible()
-
-    // 页面标题
-    await expect(page.getByText('我的设计')).toBeVisible()
-
-    // 退出登录按钮
-    await expect(page.getByRole('button', { name: '退出登录' })).toBeVisible()
-
-    // 模板区域标题
-    await expect(page.getByText('从模板开始')).toBeVisible()
-
-    // 已保存的设计区域标题
-    await expect(page.getByText('已保存的设计')).toBeVisible()
-
-    // 模板卡片
-    await expect(page.getByText('单层货架')).toBeVisible()
-    await expect(page.getByText('多层货架')).toBeVisible()
-
-    // 设计卡片
-    await expect(page.getByText('我的货架设计')).toBeVisible()
+    await expect(page.getByRole('link', { name: /空白画布/ })).toBeVisible()
+    await expect(page.getByText('从空白场景开始自由搭建')).toBeVisible()
+    await expect(templateImage).toBeVisible()
+    await expect(secondTemplateImage).toBeVisible()
+    await expect(savedDesignImage).toBeVisible()
+    await expect(templateImage).toHaveAttribute('src', /data:image\/svg\+xml/)
+    await expect(savedDesignImage).toHaveAttribute('src', /data:image\/svg\+xml/)
   })
 
-  test('点击模板卡片跳转到编辑器', async ({ page }) => {
-    await page.getByText('单层货架').click()
-    await expect(page).toHaveURL('/editor/new?template=single-shelf')
-  })
+  test('clicking 空白画布 creates a freeform design with templateId null', async ({ page }) => {
+    let createPayload: { name: string; templateId: string | null; sceneGraph: SceneNode } | null = null
 
-  test('点击设计卡片跳转到编辑器', async ({ page }) => {
-    await page.getByText('我的货架设计').click()
-    await expect(page).toHaveURL('/editor/design-1')
-  })
+    await page.route('**/api/designs', async route => {
+      const request = route.request()
 
-  test('删除设计功能', async ({ page }) => {
-    // 模拟删除 API
-    await page.route('/api/designs/design-1', route =>
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ success: true }),
-      })
+      if (request.method() === 'POST') {
+        createPayload = request.postDataJSON() as typeof createPayload
+        await route.fulfill({
+          status: 201,
+          contentType: 'application/json',
+          body: JSON.stringify({
+            success: true,
+            data: {
+              id: 'freeform-design-id',
+              name: createPayload?.name,
+              userId: 'test-user-id',
+              templateId: createPayload?.templateId ?? null,
+              sceneGraph: createPayload?.sceneGraph ?? emptyScene,
+              thumbnail: designPreview,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            },
+          }),
+        })
+        return
+      }
+
+      await route.fallback()
+    })
+
+    const createResponse = page.waitForResponse((response) =>
+      response.url().endsWith('/api/designs') && response.request().method() === 'POST',
     )
 
-    // 设置 dialog 监听器（必须在点击之前）
-    page.on('dialog', dialog => dialog.accept())
+    await page.getByRole('link', { name: /空白画布/ }).click()
 
-    // 点击删除按钮
-    await page.getByRole('button', { name: /删除/ }).click()
-
-    // 等待设计从列表中消失
-    await expect(page.getByText('我的货架设计')).not.toBeVisible({ timeout: 5000 })
+    await createResponse
+    expect(createPayload).not.toBeNull()
+    expect(createPayload?.templateId).toBeNull()
+    expect(createPayload?.sceneGraph).toEqual(emptyScene)
+    await expect(page).toHaveURL(/\/editor\/freeform-design-id$/)
   })
 
-  test('截图 — Dashboard 初始状态', async ({ page }) => {
-    await page.screenshot({
-      path: 'tests/e2e/screenshots/dashboard-initial.png',
-      fullPage: true,
-    })
+  test('clicking a saved design card reopens that design', async ({ page }) => {
+    await page.getByRole('link', { name: /我的货架设计/ }).click()
+    await expect(page).toHaveURL('/editor/design-1')
   })
 })
-

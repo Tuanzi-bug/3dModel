@@ -5,12 +5,16 @@ import { useRouter } from 'next/navigation'
 import { useEditorStore } from '@/stores/editor-store'
 import { EditorShell } from '@/components/editor/EditorShell'
 import { Loader2 } from 'lucide-react'
+import { useAutoSave } from '@/hooks/use-auto-save'
 
 export default function EditEditorPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const loadDesign = useEditorStore((s) => s.loadDesign)
+
+  // Enable auto-save
+  useAutoSave()
 
   useEffect(() => {
     fetch(`/api/designs/${id}`)

@@ -30,7 +30,7 @@ export default function DashboardPage() {
   }, [router])
 
   async function handleDelete(id: string) {
-    if (!confirm('确定要删除这个设计吗？')) return
+    if (!confirm('删除设计：删除后无法恢复，确认删除此设计吗？')) return
     const res = await fetch(`/api/designs/${id}`, { method: 'DELETE' })
     if (res.ok) {
       setDesigns((prev) => prev.filter((d) => d.id !== id))
@@ -46,10 +46,10 @@ export default function DashboardPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50">
+    <main className="min-h-screen bg-slate-50 overflow-x-hidden">
       {/* 导航栏 */}
       <nav className="bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-4 sm:px-6">
           <h1 className="text-2xl font-bold text-slate-900">ShelfCraft</h1>
           <button
             onClick={logout}
@@ -60,7 +60,7 @@ export default function DashboardPage() {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6">
         {/* 页面标题 */}
         <header className="mb-8">
           <h2 className="text-4xl font-bold text-slate-900">我的设计</h2>
@@ -68,18 +68,45 @@ export default function DashboardPage() {
         {/* 从模板创建新设计 */}
         <section className="mb-12">
           <h3 className="text-lg font-semibold text-slate-900 mb-4">
-            从模板开始
+            从预置方案开始
           </h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+            <Link
+              href="/editor/new?mode=freeform"
+              className="group relative flex flex-col justify-between p-6 bg-white border border-slate-200 rounded-xl
+                       hover:shadow-md hover:border-slate-300 transition-all duration-200 cursor-pointer min-h-[176px]"
+            >
+              <div>
+                <div className="w-16 h-16 bg-slate-100 rounded-lg mb-3 flex items-center justify-center">
+                  <Plus className="w-8 h-8 text-accent transition-transform duration-200 group-hover:scale-110" />
+                </div>
+                <span className="block text-sm font-medium text-slate-900">
+                  空白画布
+                </span>
+              </div>
+              <p className="mt-3 text-xs leading-5 text-slate-500">
+                从空白场景开始自由搭建
+              </p>
+            </Link>
             {templates.map((t) => (
               <Link
                 key={t.id}
                 href={`/editor/new?template=${t.id}`}
-                className="flex flex-col items-center p-6 bg-white border border-slate-200 rounded-xl
+                className="group relative flex flex-col items-center p-6 bg-white border border-slate-200 rounded-xl
                          hover:shadow-md hover:border-slate-300 transition-all duration-200 cursor-pointer"
               >
-                <div className="w-16 h-16 bg-slate-100 rounded-lg mb-3 flex items-center justify-center">
-                  <Plus className="w-8 h-8 text-accent" />
+                <div className="w-16 h-16 bg-slate-100 rounded-lg mb-3 flex items-center justify-center relative overflow-hidden">
+                  {t.thumbnail ? (
+                    <img
+                      src={t.thumbnail}
+                      alt={`${t.name}预览图`}
+                      className="absolute inset-0 h-full w-full object-contain p-1.5"
+                    />
+                  ) : (
+                    <div className="text-slate-400 text-xs">无预览图</div>
+                  )}
+                  <div className="absolute inset-0 bg-white/0 transition-colors duration-200 group-hover:bg-white/20" />
+                  <Plus className="w-8 h-8 text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-200 relative z-10" />
                 </div>
                 <span className="text-sm font-medium text-slate-700 text-center">
                   {t.name}
@@ -96,12 +123,13 @@ export default function DashboardPage() {
           </h3>
           {designs.length === 0 ? (
             <div className="text-center py-12 bg-white border border-slate-200 rounded-xl">
-              <p className="text-slate-500">
-                还没有设计。从上方选择一个模板开始吧！
+              <p className="text-lg font-semibold text-slate-900">还没有设计</p>
+              <p className="mt-2 text-sm text-slate-500">
+                先从一个预置方案开始，进入编辑器后继续调整组件与属性。
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {designs.map((d) => (
                 <div
                   key={d.id}
@@ -113,8 +141,8 @@ export default function DashboardPage() {
                       {d.thumbnail ? (
                         <img
                           src={d.thumbnail}
-                          alt={d.name}
-                          className="w-full h-full object-cover"
+                          alt={`${d.name}预览图`}
+                          className="w-full h-full object-contain p-3"
                         />
                       ) : (
                         <div className="text-slate-400 text-sm">无预览图</div>

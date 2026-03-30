@@ -1,5 +1,6 @@
+import { Fragment, createElement } from 'react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { renderHook, act } from '@testing-library/react'
+import { render, renderHook, screen, fireEvent, act, cleanup } from '@testing-library/react'
 import { useAutoSave } from '@/hooks/use-auto-save'
 import { useEditorStore } from '@/stores/editor-store'
 
@@ -24,6 +25,21 @@ const localStorageMock = (() => {
 })()
 vi.stubGlobal('localStorage', localStorageMock)
 
+function HookHarness() {
+  const { manualSave, saveStatus } = useAutoSave()
+
+  return createElement(
+    Fragment,
+    null,
+    createElement(
+      'button',
+      { type: 'button', onClick: () => void manualSave() },
+      'manual save',
+    ),
+    createElement('span', { 'data-testid': 'save-status' }, saveStatus),
+  )
+}
+
 describe('useAutoSave', () => {
   beforeEach(() => {
     vi.useFakeTimers()
@@ -34,12 +50,14 @@ describe('useAutoSave', () => {
       designId: null,
       sceneGraph: { id: 'root', type: 'group', position: [0,0,0], rotation: [0,0,0], params: {}, children: [] },
       designName: 'Test Design',
+      transformMode: 'translate',
     })
   })
 
   afterEach(() => {
     vi.useRealTimers()
     vi.clearAllMocks()
+    cleanup()
   })
 
   it('does not save when designId is null', async () => {
@@ -52,7 +70,7 @@ describe('useAutoSave', () => {
     expect(mockFetch).not.toHaveBeenCalled()
   })
 
-  it('debounces auto-save 3 seconds after sceneGraph changes', async () => {
+  it('debounces auto-save 500ms after sceneGraph changes', async () => {
     useEditorStore.setState({ designId: 'design-123' })
 
     const { rerender } = renderHook(() => useAutoSave())
@@ -71,7 +89,7 @@ describe('useAutoSave', () => {
 
     // Advance past debounce
     await act(async () => {
-      vi.advanceTimersByTime(3000)
+      vi.advanceTimersByTime(500)
     })
 
     expect(mockFetch).toHaveBeenCalledWith(
@@ -92,7 +110,7 @@ describe('useAutoSave', () => {
     })
 
     await act(async () => {
-      vi.advanceTimersByTime(3000)
+      vi.advanceTimersByTime(500)
     })
 
     const saved = JSON.parse(localStorageMock.getItem('autosave-design') ?? '{}')
@@ -118,17 +136,64 @@ describe('useAutoSave', () => {
     )
   })
 
+  it('includes templateId in the patch payload so freeform conversion persists', async () => {
+    useEditorStore.setState({
+      designId: 'design-freeform',
+      mode: 'freeform',
+      templateId: null,
+    })
+
+    const { result } = renderHook(() => useAutoSave())
+
+    await act(async () => {
+      await result.current.manualSave()
+    })
+
+    expect(JSON.parse(mockFetch.mock.calls[0]?.[1]?.body as string)).toMatchObject({
+      name: 'Test Design',
+      templateId: null,
+    })
+  })
+
   it('handles fetch network error gracefully', async () => {
     useEditorStore.setState({ designId: 'design-err' })
     mockFetch.mockRejectedValueOnce(new Error('Network error'))
 
-    const { result } = renderHook(() => useAutoSave())
+    render(createElement(HookHarness))
 
-    // Should not throw
-    await expect(
-      act(async () => {
-        await result.current.manualSave()
-      })
-    ).resolves.not.toThrow()
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'manual save' }))
+      await Promise.resolve()
+    })
+
+    expect(screen.getByTestId('save-status').textContent).toBe('error')
+  })
+
+  it('marks save as saved only when the patch response is ok', async () => {
+    useEditorStore.setState({ designId: 'design-ok' })
+    mockFetch.mockResolvedValueOnce({ ok: true })
+
+    render(createElement(HookHarness))
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'manual save' }))
+      await Promise.resolve()
+    })
+
+    expect(screen.getByTestId('save-status').textContent).toBe('saved')
+  })
+
+  it('treats non-ok responses as save failures', async () => {
+    useEditorStore.setState({ designId: 'design-bad' })
+    mockFetch.mockResolvedValueOnce({ ok: false })
+
+    render(createElement(HookHarness))
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'manual save' }))
+      await Promise.resolve()
+    })
+
+    expect(screen.getByTestId('save-status').textContent).toBe('error')
   })
 })

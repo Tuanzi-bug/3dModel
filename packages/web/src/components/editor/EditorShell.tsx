@@ -32,6 +32,14 @@ export function EditorShell() {
         e.preventDefault()
         useEditorStore.getState().undo()
       }
+      // Ctrl+D 或 Cmd+D: 复制选中的节点
+      else if (e.key.toLowerCase() === 'd' && (e.ctrlKey || e.metaKey)) {
+        const selected = useEditorStore.getState().selectedNodeId
+        if (selected) {
+          e.preventDefault()
+          useEditorStore.getState().duplicateNode(selected)
+        }
+      }
       // Delete 或 Backspace: 删除选中的节点
       else if (e.key === 'Delete' || e.key === 'Backspace') {
         const selected = useEditorStore.getState().selectedNodeId
@@ -47,11 +55,11 @@ export function EditorShell() {
   }, [])
 
   return (
-    <div className="flex flex-col h-screen bg-slate-50">
+    <div className="flex h-screen flex-col overflow-hidden bg-slate-50">
       <Header />
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 min-h-0 flex-col overflow-x-hidden lg:flex-row">
         <ComponentPanel />
-        <div className="flex-1 relative">
+        <div className="relative flex-1 min-h-[320px] lg:min-h-0">
           <Viewport />
         </div>
         <PropertiesPanel />

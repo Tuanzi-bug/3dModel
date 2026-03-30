@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createDesignSchema } from '@3d-modeler/core'
+import { createDesignSchema, generateScenePreviewDataUrl } from '@3d-modeler/core'
 import { prisma } from '@/lib/prisma'
 import { withAuth, isAuthError } from '@/lib/with-auth'
 
@@ -21,9 +21,9 @@ export async function GET(request: NextRequest) {
         name: true,
         userId: true,
         templateId: true,
+        thumbnail: true,
         createdAt: true,
         updatedAt: true,
-        // Note: sceneGraph and thumbnail excluded from list endpoint for performance
       },
       skip,
       take: limit,
@@ -35,6 +35,7 @@ export async function GET(request: NextRequest) {
     success: true,
     data: designs.map((d: { createdAt: Date; updatedAt: Date; [key: string]: unknown }) => ({
       ...d,
+      thumbnail: d.thumbnail ?? null,
       createdAt: d.createdAt.toISOString(),
       updatedAt: d.updatedAt.toISOString(),
     })),
@@ -69,6 +70,7 @@ export async function POST(request: NextRequest) {
       userId: auth.userId,
       templateId: parsed.data.templateId ?? null,
       sceneGraph: JSON.stringify(parsed.data.sceneGraph),
+      thumbnail: generateScenePreviewDataUrl(parsed.data.sceneGraph),
     },
   })
 

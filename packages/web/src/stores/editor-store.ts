@@ -5,8 +5,11 @@ import {
   updateNode as updateNodeInTree,
   addNode as addNodeToTree,
   removeNode as removeNodeFromTree,
-  duplicateNode as duplicateNodeInTree,
+  duplicateNodeWithFactory,
   getTemplateById,
+  parseNodeId,
+  regenerateNodeIds,
+  resolveSnapPosition,
 } from '@3d-modeler/core'
 
 const MAX_HISTORY = 50
@@ -26,14 +29,17 @@ export interface EditorState {
   mode: 'template' | 'freeform'
   templateId: string | null
   templateParams: TemplateParams | null
+  transformMode: 'translate' | 'rotate'
   past: SceneNode[]
   future: SceneNode[]
+  typeCounters: Record<string, number>
 
   // Design metadata
   designId: string | null
   designName: string
 
   selectNode: (id: string | null) => void
+  setTransformMode: (mode: 'translate' | 'rotate') => void
   updateNodeTransform: (id: string, updates: { position?: Vec3; rotation?: Vec3 }) => void
   updateNodeParams: (id: string, params: SceneNode['params']) => void
   addNode: (node: SceneNode) => void
@@ -43,9 +49,11 @@ export interface EditorState {
   redo: () => void
   applyTemplate: (templateId: string, params: TemplateParams) => void
   updateTemplateParams: (params: Partial<TemplateParams>) => void
+  switchToFreeform: () => void
   loadDesign: (opts: { id: string; name: string; sceneGraph: SceneNode; templateId: string | null; templateParams: TemplateParams | null }) => void
   setDesignName: (name: string) => void
   resetScene: () => void
+  generateNodeId: (type: string) => string
 }
 
 function pushHistory(state: EditorState): Partial<EditorState> {
@@ -54,24 +62,86 @@ function pushHistory(state: EditorState): Partial<EditorState> {
   return { past, future: [] }
 }
 
+function deriveTypeCounters(sceneGraph: SceneNode): Record<string, number> {
+  const counters: Record<string, number> = {}
+
+  function visit(node: SceneNode) {
+    if (node.id !== 'root') {
+      const parsed = parseNodeId(node.id)
+      const numericSequence = Number(parsed.sequence)
+
+      if (Number.isFinite(numericSequence) && numericSequence >= 0) {
+        counters[node.type] = Math.max(counters[node.type] ?? 0, numericSequence + 1)
+      } else {
+        counters[node.type] = (counters[node.type] ?? 0) + 1
+      }
+    }
+
+    node.children.forEach(visit)
+  }
+
+  visit(sceneGraph)
+
+  return counters
+}
+
+function regenerateSceneWithCounters(
+  sceneGraph: SceneNode,
+  counters: Record<string, number>,
+) {
+  const nextCounters = { ...counters }
+  const nextSceneGraph = regenerateNodeIds(sceneGraph, (type) => {
+    const currentCount = nextCounters[type] || 0
+    nextCounters[type] = currentCount + 1
+    return `${type}-${currentCount}`
+  })
+
+  return {
+    nextSceneGraph,
+    nextCounters,
+  }
+}
+
 export const useEditorStore = create<EditorState>((set, get) => ({
   sceneGraph: emptyRoot,
   selectedNodeId: null,
   mode: 'template',
   templateId: null,
   templateParams: null,
+  transformMode: 'translate',
   past: [],
   future: [],
+  typeCounters: {},
   designId: null,
   designName: 'Untitled',
 
   selectNode: (id) => set({ selectedNodeId: id }),
 
+  setTransformMode: (mode) => set({ transformMode: mode }),
+
+  generateNodeId: (type) => {
+    const state = get()
+    const currentCount = state.typeCounters[type] || 0
+    set({ typeCounters: { ...state.typeCounters, [type]: currentCount + 1 } })
+    return `${type}-${currentCount}`
+  },
+
   updateNodeTransform: (id, updates) =>
-    set((state) => ({
-      ...pushHistory(state),
-      sceneGraph: updateNodeInTree(state.sceneGraph, id, updates),
-    })),
+    set((state) => {
+      const nextPosition = updates.position
+        ? resolveSnapPosition(state.sceneGraph, updates.position, {
+            movingNodeId: id,
+          }).position
+        : undefined
+
+      return {
+        ...pushHistory(state),
+        sceneGraph: updateNodeInTree(state.sceneGraph, id, {
+          ...updates,
+          position: nextPosition,
+        }),
+      }
+    }),
 
   updateNodeParams: (id, params) =>
     set((state) => ({
@@ -82,7 +152,12 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   addNode: (node) =>
     set((state) => ({
       ...pushHistory(state),
-      sceneGraph: addNodeToTree(state.sceneGraph, node),
+      sceneGraph: addNodeToTree(state.sceneGraph, {
+        ...node,
+        position: resolveSnapPosition(state.sceneGraph, node.position, {
+          movingNode: node,
+        }).position,
+      }),
     })),
 
   removeNode: (id) =>
@@ -93,10 +168,29 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     })),
 
   duplicateNode: (id) =>
-    set((state) => ({
-      ...pushHistory(state),
-      sceneGraph: duplicateNodeInTree(state.sceneGraph, id),
-    })),
+    set((state) => {
+      const nextCounters = { ...state.typeCounters }
+      const { sceneGraph, duplicatedRootId } = duplicateNodeWithFactory(
+        state.sceneGraph,
+        id,
+        (type) => {
+          const currentCount = nextCounters[type] || 0
+          nextCounters[type] = currentCount + 1
+          return `${type}-${currentCount}`
+        },
+      )
+
+      if (!duplicatedRootId) {
+        return state
+      }
+
+      return {
+        ...pushHistory(state),
+        sceneGraph,
+        selectedNodeId: duplicatedRootId,
+        typeCounters: nextCounters,
+      }
+    }),
 
   undo: () =>
     set((state) => {
@@ -123,13 +217,21 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   applyTemplate: (templateId, params) => {
     const template = getTemplateById(templateId)
     if (!template) return
+
+    const state = get()
+    const { nextSceneGraph, nextCounters } = regenerateSceneWithCounters(
+      template.generate(params),
+      state.typeCounters,
+    )
+
     set((state) => ({
       ...pushHistory(state),
-      sceneGraph: template.generate(params),
+      sceneGraph: nextSceneGraph,
       templateId,
       templateParams: params,
       mode: 'template',
       selectedNodeId: null,
+      typeCounters: nextCounters,
     }))
   },
 
@@ -139,29 +241,48 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       const newParams = { ...state.templateParams, ...partialParams }
       const template = getTemplateById(state.templateId)
       if (!template) return state
+
+      const { nextSceneGraph, nextCounters } = regenerateSceneWithCounters(
+        template.generate(newParams),
+        state.typeCounters,
+      )
+
       return {
         ...pushHistory(state),
-        sceneGraph: template.generate(newParams),
+        sceneGraph: nextSceneGraph,
         templateParams: newParams,
         selectedNodeId: null,
+        typeCounters: nextCounters,
       }
     }),
 
-  loadDesign: (opts) => {
-    // Recover templateParams from template defaults if available
-    const template = opts.templateId ? getTemplateById(opts.templateId) : null
-    const templateParams = opts.templateParams ?? template?.defaultParams ?? null
+  switchToFreeform: () =>
+    set((state) => ({
+      mode: 'freeform',
+      templateId: null,
+      templateParams: null,
+      sceneGraph: state.sceneGraph,
+      selectedNodeId: state.selectedNodeId,
+      past: state.past,
+      future: state.future,
+      typeCounters: state.typeCounters,
+      designId: state.designId,
+      designName: state.designName,
+    })),
 
+  loadDesign: (opts) => {
     set({
       designId: opts.id,
       designName: opts.name,
       sceneGraph: opts.sceneGraph,
       templateId: opts.templateId,
-      templateParams,
+      templateParams: opts.templateParams,
       mode: opts.templateId ? 'template' : 'freeform',
+      transformMode: 'translate',
       past: [],
       future: [],
       selectedNodeId: null,
+      typeCounters: deriveTypeCounters(opts.sceneGraph),
     })
   },
 
@@ -173,7 +294,12 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       selectedNodeId: null,
       past: [],
       future: [],
+      mode: 'template',
       templateId: null,
       templateParams: null,
+      transformMode: 'translate',
+      typeCounters: {},
+      designId: null,
+      designName: 'Untitled',
     }),
 }))

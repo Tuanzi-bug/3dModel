@@ -1,5 +1,6 @@
 'use client'
 
+import { getTemplateById } from '@3d-modeler/core'
 import { useEditorStore } from '@/stores/editor-store'
 import { Info } from 'lucide-react'
 
@@ -17,14 +18,16 @@ export function StatusBar() {
   }
 
   const totalNodes = countNodes(sceneGraph)
+  const templateName = templateId ? getTemplateById(templateId)?.name ?? templateId : null
+  const sourceLabel = templateName ? `预置方案 · ${templateName}` : '当前设计'
 
   return (
-    <footer className="flex items-center justify-between px-6 py-2 bg-white border-t border-slate-200 text-xs text-slate-600">
-      <div className="flex items-center gap-4">
+    <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 bg-white px-4 py-2 text-xs text-slate-600 lg:px-6">
+      <div className="flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-2">
           <Info className="w-4 h-4" />
           <span>
-            模板: <span className="font-medium text-slate-900">{templateId || '未选择'}</span>
+            来源: <span className="font-medium text-slate-900">{sourceLabel}</span>
           </span>
         </div>
         <div className="h-4 w-px bg-slate-300" />
