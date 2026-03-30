@@ -7,13 +7,15 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "dist/**"]
+      "outputs": [".next/**", "dist/**"],
+      "env": ["DATABASE_URL", "NODE_ENV"]
     },
     "test": {
       "dependsOn": ["^build"]
     },
     "test:e2e": {
-      "dependsOn": ["build"]
+      "dependsOn": ["build"],
+      "env": ["BASE_URL", "DATABASE_URL", "NODE_ENV", "PLAYWRIGHT_BROWSERS_PATH"]
     },
     "lint": {}
   }

@@ -133,13 +133,13 @@ export const useEditorStore = create<EditorState>((set, get) => ({
             movingNodeId: id,
           }).position
         : undefined
+      const patch = nextPosition
+        ? { ...updates, position: nextPosition }
+        : updates
 
       return {
         ...pushHistory(state),
-        sceneGraph: updateNodeInTree(state.sceneGraph, id, {
-          ...updates,
-          position: nextPosition,
-        }),
+        sceneGraph: updateNodeInTree(state.sceneGraph, id, patch),
       }
     }),
 

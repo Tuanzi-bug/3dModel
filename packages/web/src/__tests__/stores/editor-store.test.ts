@@ -179,6 +179,28 @@ describe('EditorStore', () => {
     expect(useEditorStore.getState().sceneGraph.children[1]?.position).toEqual([0, 1, 0])
   })
 
+  it('preserves node position when only the rotation changes', () => {
+    const rod: SceneNode = {
+      id: 'rod-rotation-test',
+      type: 'rod',
+      position: [0.5, 0.25, -0.75],
+      rotation: [0, 0, 0],
+      params: { diameter: 8, length: 1 },
+      children: [],
+    }
+
+    useEditorStore.getState().addNode(rod)
+    useEditorStore.getState().updateNodeTransform('rod-rotation-test', {
+      rotation: [0, 0.5, 0],
+    })
+
+    expect(useEditorStore.getState().sceneGraph.children[0]).toMatchObject({
+      id: 'rod-rotation-test',
+      position: [0.5, 0.25, -0.75],
+      rotation: [0, 0.5, 0],
+    })
+  })
+
   describe('applyTemplate', () => {
     it('regenerates all node IDs to type-sequence format', () => {
       const params: TemplateParams = {

@@ -68,9 +68,9 @@ test.describe('Editor 页面', () => {
     await page.waitForTimeout(2000)
 
     // 验证编辑器组件已加载 - 使用更宽松的选择器
-    await expect(page.getByText('返回')).toBeVisible({ timeout: 10000 })
-    await expect(page.getByText('模板库')).toBeVisible()
-    await expect(page.getByText('属性面板')).toBeVisible()
+    await expect(page.getByRole('button', { name: '返回' })).toBeVisible({ timeout: 10000 })
+    await expect(page.getByText('组件库')).toBeVisible()
+    await expect(page.getByText('组件属性')).toBeVisible()
   })
 
   test('从模板创建新设计 - 无效模板 ID 跳转回 Dashboard', async ({ page }) => {
@@ -128,7 +128,7 @@ test.describe('Editor 页面', () => {
     await page.waitForTimeout(2000)
 
     // 验证编辑器组件已加载
-    await expect(page.getByText('返回')).toBeVisible({ timeout: 10000 })
+    await expect(page.getByRole('button', { name: '返回' })).toBeVisible({ timeout: 10000 })
   })
 
   test('编辑现有设计 - 加载失败跳转回 Dashboard', async ({ page }) => {
@@ -163,5 +163,3 @@ test.describe('Editor 页面', () => {
     })
   })
 })
-
-
