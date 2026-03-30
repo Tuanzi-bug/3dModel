@@ -22,10 +22,10 @@ Users can quickly create, save, reopen, and refine modular shelf designs in a vi
 - ✓ User can distinguish preset entries and saved designs through generated preview imagery — Phase 2
 - ✓ User can duplicate components, use the viewport gizmo safely, and trust dashboard previews after the Phase 2.1 polish pass — Phase 2.1
 - ✓ User can snap components, inspect designs with preset views/dimensions, and export a BOM from the web editor — Phase 3
+- ✓ User can use repaired precision controls, stable viewport focus/zoom behavior, and Excel-safe BOM export after the Phase 3.1 bugfix pass — Phase 3.1
 
 ### Active
 
-- [ ] Fix post-Phase-3 snapping feel, CSV export compatibility, and viewport focus/zoom behavior before Phase 4 planning
 - [ ] Reuse the shared core logic in a WeChat mini-program client
 
 ### Out of Scope
@@ -86,4 +86,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-03-30 after inserting Phase 3.1 for precision usability bugfixes*
+*Last updated: 2026-03-30 after completing Phase 3.1 precision usability bugfixes*
